@@ -1,0 +1,48 @@
+
+<h1>Users</h1>
+<%=@users.inspect.inspect%>
+<br><br>
+<table>
+  <thead>
+    <tr>
+      <th style="border:3px solid #ecf0f1;">id (in DB)  </th>
+      <th style="border:3px solid #ecf0f1;">nickname  </th>
+      <th style="border:3px solid #ecf0f1;">image(url)  </th>
+      <th style="border:3px solid #ecf0f1;">email  </th>
+      <th style="border:3px solid #ecf0f1;">sign_in_count  </th>
+      <th style="border:3px solid #ecf0f1;">current_sign_in_at  </th>
+      <th style="border:3px solid #ecf0f1;">last_sign_in_at  </th>
+      <th style="border:3px solid #ecf0f1;">current_sign_in_ip  </th>
+      <th style="border:3px solid #ecf0f1;">last_sign_in_ip  </th>
+      <th style="border:3px solid #ecf0f1;">created_at  </th>
+      <th style="border:3px solid #ecf0f1;">updated_at  </th>
+      <th colspan="5"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @users.each do |u| %>
+      <tr>
+        <td style="border:3px solid #ecf0f1;"><%= u.id %>  </td>
+        <td style="border:3px solid #ecf0f1;"><%= u.nickname %>  </td>
+        <td style="border:3px solid #ecf0f1;"><a href="<%= u.image %>"><%= u.image %></a>  </td>
+        <td style="border:3px solid #ecf0f1;"><%= u.email %>  </td>
+        <td style="border:3px solid #ecf0f1;"><%= u.sign_in_count %>  </td>
+        <td style="border:3px solid #ecf0f1;"><%= u.current_sign_in_at.in_time_zone("Seoul") %>  </td>
+        <td style="border:3px solid #ecf0f1;"><%= u.last_sign_in_at.in_time_zone("Seoul") %>  </td>
+        <td style="border:3px solid #ecf0f1;"><%= u.current_sign_in_ip %>  </td>
+        <td style="border:3px solid #ecf0f1;"><%= u.last_sign_in_ip %>  </td>
+        <td style="border:3px solid #ecf0f1;"><%= u.created_at %>  </td>
+        <td style="border:3px solid #ecf0f1;"><%= u.updated_at %>  </td>
+        <td style="border:3px solid #ecf0f1;">
+            <a href="/admin/user_edit/<%=u.id%>">[  modify  ]</a>
+            or
+            <a href="/admin/user_destroy/<%=u.id%>">[  delete  ]</a>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+

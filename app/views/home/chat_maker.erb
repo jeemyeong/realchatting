@@ -1,0 +1,21 @@
+
+    <div class="container">
+
+      <%= form_tag "/home/chat_making", method: "post", enctype: "multipart/form-data", class: "form-signin" do %>
+
+        <h2 class="form-signin-heading">챗만들기</h2>
+        <br>
+        
+        <label for="inputTitle">챗 이름</label>
+        <input type="text" id="inputTitle" class="form-control" name="title" placeholder="챗 이름" required autofocus>
+        
+
+
+        <label for="inputImage">이미지</label>
+        <input type="file" id="inputImage" class="form-control" placeholder="챗 이미지" name="image">
+        <br>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">챗 만들기</button>
+      </form>
+      <% end %>
+
+    </div> <!-- /container -->

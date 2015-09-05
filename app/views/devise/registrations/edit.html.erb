@@ -1,0 +1,55 @@
+<center><h1 class="badge" style="background:##2c3e50; text-align:left;">
+<%= devise_error_messages! %>
+</h1></center>
+  
+<div class="container form-signin">
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put}) do |f| %>
+    <h2 class="form-signin-heading">정보수정</h2>
+  
+    <div class="field">
+      <%= f.label :nickname, for: :inputnickname %><br />
+      <%= f.text_field :nickname, id: :inputnickname, class: "form-control", placeholder: "닉네임" %>
+    </div>
+    
+    <img src="<%=current_user.image.url%>" class="img-circle"><br />
+    <div class="field">
+      <%= f.label :image, for: :inputimage %><br />
+      <%= f.file_field :image, id: :inputimage, class: "form-control", placeholder: "이미지" %>
+    </div>
+  
+    <div class="field">
+      <%= f.label :email, for: :inputEmail %><br />
+      <%= f.email_field :email, autofocus: true, id: :inputEmail, class: "form-control", placeholder: "이메일주소" %>
+    </div>
+    <br>
+
+    <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+      <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
+    <% end %>
+  
+    <div class="field">
+      <%= f.label :password, for: :inputPassword %> <i>(비워두시면 바뀌지 않습니다.)</i><br />
+      <%= f.password_field :password, id: :inputPassword, class: "form-control", placeholder: "비밀번호", autocomplete: "off" %>
+    </div>
+  
+    <div class="field">
+      <%= f.label :password_confirmation %><br />
+      <%= f.password_field :password_confirmation,class: "form-control", placeholder: "비밀번호확인", autocomplete: "off" %>
+    </div>
+    <br>
+    
+    <div class="field">
+      <%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
+      <%= f.password_field :current_password, class: "form-control", placeholder: "현재 비밀번호", autocomplete: "off" %>
+    </div>
+  
+    <div class="actions">
+      <%= f.submit "정보수정", class: "btn btn-lg btn-success" %>
+    </div>
+  <% end %>
+  
+  <br><br><br>
+  <p><%= button_to "계정삭제", registration_path(resource_name), data: { confirm: "정말 삭제하시겠습니까?" }, method: :delete, class: "form-signin btn btn-warning" %></p>
+  
+  <%= link_to "뒤로가기", :back, class: "form-signin btn btn-success" %>
+</div>

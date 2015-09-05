@@ -1,0 +1,25 @@
+    <div class="container form-signin">
+        <%= form_tag "/admin/channel_editing/"+@channel.id.to_s, method: "post", enctype: "multipart/form-data", class: "form-signin" do %>
+            <div class="form-group">
+            <label for="inputuserid">user_id</label>
+              <input type="text" id="inputuserid" class="form-control" name="user_id" value="<%=@channel.user_id%>">
+            </div>
+            
+            <div class="form-group">
+            <label for="inputTitle">title</label>
+              <input type="text" id="inputTitle" class="form-control" name="title" value="<%=@channel.title%>">
+            </div>
+            
+            <div class="form-group">
+            <label for="inputImage" for="inputImage">이미지</label>
+            <input type="file" id="inputImage" class="form-control" placeholder="챗 이미지" name="image">
+            </div>
+            
+            <div class="form-group">
+            <label for="inputMediatype">mediatype</label>
+              <input type="text" id="inputMediatype" class="form-control" name="mediatype" value="<%=@channel.mediatype%>">
+            </div>
+          <br>
+          <button class="btn btn-success">수정하기</button>
+      <% end %>
+  </div>

@@ -1,0 +1,40 @@
+<center><h1 class="badge" style="background:##2c3e50; text-align:left;">
+<%= devise_error_messages! %>
+</h1></center>
+        
+<div class="container">
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: {class: "form-signin"}) do |f| %>
+    <h2 class="form-signin-heading">회원가입</h2>
+  
+    <div class="field">
+      <%= f.label :nickname, for: :inputnickname, class: "sr-only" %><br />
+      <%= f.text_field :nickname, id: :inputnickname, class: "form-control", required: true, placeholder: "닉네임" %>
+    </div>
+  
+    <div class="field">
+      <%= f.label :email, for: :inputEmail, class: "sr-only" %><br />
+      <%= f.email_field :email, id: :inputEmail, class: "form-control", required: true, placeholder: "이메일주소"%>
+    </div>
+    
+    <br><br>
+  
+    <div class="field">
+      <%= f.label :password, for: :inputPassword, class: "sr-only" %>
+      <% if @minimum_password_length %>
+      <em>비밀번호는 (<%= @minimum_password_length %> 자 이상)</em>
+      <% end %><br />
+      <%= f.password_field :password, id: :inputPassword, class: "form-control", placeholder: "비밀번호", required: true, autocomplete: "off" %>
+    </div>
+  
+    <div class="field">
+      <%= f.label :password_confirmation, for: :inputRePassword, class: "sr-only" %><br />
+      <%= f.password_field :password_confirmation, id: :inputRePassword, class: "form-control", placeholder: "비밀번호확인", required: true, autocomplete: "off" %>
+    </div>
+  
+    <div class="actions">
+        <%= f.submit "회원가입", class: "btn btn-lg btn-success"%>
+    </div>
+  <% end %>
+  
+  <%= render "devise/shared/links" %>
+</div>

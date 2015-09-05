@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>실챗</title>  
+  <link rel="stylesheet" href="https://bootswatch.com/flatly/bootstrap.min.css">
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <%= csrf_meta_tags %>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<%= yield %>
+
+      <!--notice & alert-->
+      <center><h1 class="badge" style="background:#2c3e50; text-align:left; font-size:30px"><%= notice %><%= alert %></h1></center>
+
+</body>
+</html>

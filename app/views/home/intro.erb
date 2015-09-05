@@ -1,0 +1,125 @@
+
+<div id="carousel-example-generic" class="carousel slide" data-ride="carousel" style="height:950px">
+  <!-- Indicators -->
+  <ol class="carousel-indicators">
+    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+  </ol>
+
+  <!-- Wrapper for slides -->
+  <div class="carousel-inner" role="listbox">
+    <div class="item active">
+        <div class ="row">
+          <div class="col-lg-2 col-md-1">
+          </div>
+          <div class="col-lg-8 col-md-7">
+              <div class="col-lg-3 col-md-3">
+              </div>
+              <div class="col-lg-6 col-md-6 col-xs-12" style="padding-bottom:30px; padding-top:30px;" id="banner">
+                  <div class=" panel panel-primary" style=" padding-bottom: 0px; margin-bottom: 0px; border:3px solid #ecf0f1;">
+                    <div class="panel-body">
+                      <center>
+                      <br><img src="<%= @banner.image.url ? @banner.image : "/assets/noimage5.jpg" %>"  class="img-thumbnail" width="100%">
+                      <br><a class="btn btn-lg btn-primary" role="button" style="font-size:25px" id="button_<%=@banner.id%>" target=_blank><span id="chat_<%=@banner.id%>"><%=@banner.title%></span>
+                      <span class="badge" style="font-size:20px"><div id="count"><div class="detach_count"><%=@banner.channel_joiners.all.count%></div></div></span></a>
+                      </center>
+                    </div>
+                    <div id="logs">
+                      <% @banner.chat_logs.last(10).each do |c| %> <!--10개만 보여주자--> 
+                        <% if c.user_id == nil %>
+                          <div class="detach row">
+                            <div class="col-lg-12 col-md-12" style="margin-bottom:5px;">
+                              <div class="col-lg-2 col-md-2" style="font-size:13px;"><img src="/assets/hand.jpg" class="img-circle" style="height:30px; width:30px;">(<%=c.guest.ip_address.reverse[0..2]%>)</div>
+                              <div class="shuffle msg col-lg-8 col-md-8"><%=c.msg %></div>
+                              <div class="col-lg-2 col-md-2" style="text-align:right; font-size:5px;"><abbr class="timeago" title="<%=c.created_at.in_time_zone("Seoul").iso8601 %>"><%=c.created_at.in_time_zone("Seoul").iso8601 %></abbr></div>
+                            </div>
+                          </div>
+                        <% else %>
+                          <div class="detach row">
+                            <div class="col-lg-12 col-md-12" style="margin-bottom:5px;">
+                              <div class="col-lg-2 col-md-2" style="font-size:14px;"><img src="<%=c.user.image.thumb.url ? c.user.image.thumb : "/assets/user_image.jpg"%>" class="img-circle" style="height:30px; width:30px;"><b><%=c.user.nickname %></b></div>
+                              <div class="shuffle msg col-lg-8 col-md-8"><%=c.msg %></div>
+                              <div class="col-lg-2 col-md-2" style="text-align:right; font-size:5px;"><abbr class="timeago" title="<%=c.created_at.in_time_zone("Seoul").iso8601 %>"><%=c.created_at.in_time_zone("Seoul").iso8601 %></abbr></div>
+                            </div>
+                          </div>
+                        <% end %>
+                      <% end %>
+                      </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+      <!--<div class="carousel-caption">-->
+      <!--</div>-->
+    </div>
+    <% @channels.each do |c| %> 
+    <div class="item">
+        <div class ="row">
+          <div class="col-lg-2 col-md-1">
+          </div>
+          <div class="col-lg-8 col-md-7">
+              <div class="col-lg-3 col-md-3">
+              </div>
+              <div class="col-lg-6 col-md-6 col-xs-12" style="padding-bottom:30px; padding-top:30px;" id="log_<%=c.id%>">
+                  <div class=" panel panel-primary" style=" padding-bottom: 0px; margin-bottom: 0px; border:3px solid #ecf0f1;">
+                    <div class="panel-body">
+                      <center>
+                      <br><img src="<%= c.image.url ? c.image : "/assets/noimage5.jpg" %>"  class="img-thumbnail" width="100%">
+                      <br><a class="btn btn-lg btn-primary" role="button" style="font-size:25px" id="button_<%=c.id%>" target=_blank><span id="chat_<%=c.id%>"><%=c.title%></span>
+                      <span class="badge" style="font-size:20px"><div id="count"><div class="detach_count_<%=c.id%>"><%=c.channel_joiners.all.count%></div></div></span></a>
+                      </center>
+                    </div>
+                    <div id="logs">
+                      <% c.chat_logs.last(10).each do |cl| %> <!--10개만 보여주자--> 
+                        <% if cl.user_id == nil %>
+                          <div class="detach_<%=cl.id%> row">
+                            <div class="col-lg-12 col-md-12" style="margin-bottom:5px;">
+                              <div class="col-lg-2 col-md-2" style="font-size:13px;"><img src="/assets/hand.jpg" class="img-circle" style="height:30px; width:30px;">(<%=cl.guest.ip_address.reverse[0..2]%>)</div>
+                              <div class="shuffle_<%=c.id%> msg col-lg-8 col-md-8"><%=cl.msg %></div>
+                              <div class="col-lg-2 col-md-2" style="text-align:right; font-size:5px;"><abbr class="timeago" title="<%=cl.created_at.in_time_zone("Seoul").iso8601 %>"><%=cl.created_at.in_time_zone("Seoul").iso8601 %></abbr></div>
+                            </div>
+                          </div>
+                        <% else %>
+                          <div class="detach_<%=cl.id%> row">
+                            <div class="col-lg-12 col-md-12" style="margin-bottom:5px;">
+                              <div class="col-lg-2 col-md-2" style="font-size:14px;"><img src="<%=cl.user.image.thumb.url ? cl.user.image.thumb : "/assets/user_image.jpg"%>" class="img-circle" style="height:30px; width:30px;"><b><%=cl.user.nickname %></b></div>
+                              <div class="shuffle_<%=c.id%> msg col-lg-8 col-md-8"><%=cl.msg %></div>
+                              <div class="col-lg-2 col-md-2" style="text-align:right; font-size:5px;"><abbr class="timeago" title="<%=cl.created_at.in_time_zone("Seoul").iso8601 %>"><%=cl.created_at.in_time_zone("Seoul").iso8601 %></abbr></div>
+                            </div>
+                          </div>
+                        <% end %>
+                      <% end %>
+                      </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% end %>
+  </div>
+
+  <!-- Controls -->
+  <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
+
+<script>
+  $(function() {
+    $("abbr.timeago").timeago(); //ago형태로 바꿔준다.
+    $("#button_<%=@banner.id%>").click(function(){ //배너를 눌렀을때 팝업으로 뜨자
+     window.open('/home/chat/<%=@banner.id%>', '_blank', 'width=800, height=800, toolbar=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no');
+    })
+    <% @channels.each do |c| %> 
+        $("#button_<%=c.id%>").click(function(){ //채팅방을 눌렀을때 팝업으로 뜨자
+          window.open('/home/chat/<%=c.id%>', '_blank', 'width=800, height=800, toolbar=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no');
+        })
+    <% end %> //채널들 끝
+  });
+</script>
