@@ -1,0 +1,44 @@
+
+    <div class="container">
+
+      <%= form_tag "/home/timeline_editing/"+ @edit.id.to_s, method: "post", enctype: "multipart/form-data", class: "form-signin", style: "padding: 0px 0px 0px 0px;" do %>
+        <div class="modal-header">
+          <h2 class="modal-title form-signin-heading"><b>게시글 수정하기</b></h2>
+        </div>
+        <div class="modal-body">
+          <label for="inputTitle">제목</label>
+          <input type="text" id="inputTitle" class="form-control" name="title" value="<%=@edit.title%>" placeholder="제목"  autofocus>
+          <br>
+          <label for="inputText">내용</label>
+          <textarea id="inputText" class="form-control" name="text" placeholder="내용" rows="4"  autofocus><%=@edit.text%></textarea>
+          <br>
+          <label for="selectBox">버튼</label>
+            <select id="selectBox" name="button">
+              <option value="asterisk">asterisk</option>
+              <option value="plus">plus</option>
+              <option value="euro">euro</option>
+              <option value="eur">eur</option>
+              <option value="minus">minus</option>
+              <option value="cloud">cloud</option>
+              <option value="envelope">envelope</option>
+              <option value="pencil">pencil</option>
+              <option value="glass">glass</option>
+              <option value="music">music</option>
+              <option value="search">search</option>
+              <option value="heart">heart</option>
+              <option value="star">star</option>
+              <option value="user">user</option>
+            </select>
+          <br>
+          <label for="inputImage">이미지(선택사항)</label>
+          <input type="file" id="inputImage" class="form-control" placeholder="챗 이미지" name="image">
+          <br>
+          
+        </div>
+        <div class="modal-footer">
+          <a href="/home/timeline_destroying/<%=@edit.id%>" class="btn btn-sm btn-primary" style="margin-left:0px;">삭제하기</a>
+          <button class="btn btn-sm btn-primary" style="margin-left:0px;">수정하기</button>
+        </div>
+      <% end %>
+
+    </div> <!-- /container -->

@@ -24,6 +24,8 @@ class AdminController < ApplicationController
     Channel.find(params[:id]).destroy
     ChatLog.where(:channel_id => params[:id]).all.destroy
     ChannelJoiner.where(:channel_id => params[:id]).all.destroy
+    Timeline.where(:channel_id => params[:id]).all.destroy
+    TimelineReply.where(:channel_id => params[:id]).all.destroy
     redirect_to :back
   end
   
@@ -35,6 +37,8 @@ class AdminController < ApplicationController
     User.find(params[:id]).destroy
     ChatLog.where(:user_id => params[:id]).all.destroy
     ChannelJoiner.where(:user_id => params[:id]).all.destroy
+    Timeline.where(:user_id => params[:id]).all.destroy
+    TimelineReply.where(:user_id => params[:id]).all.destroy
     redirect_to :back
   end
 end

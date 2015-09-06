@@ -152,21 +152,60 @@ class HomeController < ApplicationController
   end
   
   def timeline_maker
-    Timeline.create(user_id: current_user.id,
-                    channel_id: params[:id],
-                    title: params[:title],
-                    text: params[:text],
-                    button: params[:button],
-                    image: params[:image])
+      Timeline.create(user_id: current_user.id,
+                      channel_id: params[:id],
+                      title: params[:title],
+                      text: params[:text],
+                      button: params[:button],
+                      image: params[:image])
       redirect_to :back
   end
   
   def timeline_reply_maker
-    TimelineReply.create(user_id: current_user.id,
-                         channel_id: params[:id],
-                         timeline_id: params[:timeline],
-                         reply: params[:reply])
-     redirect_to :back
+      tl = TimelineReply.create(user_id: params[:user_id],
+                                channel_id: params[:channel_id],
+                                timeline_id: params[:timeline_id],
+                                reply: params[:reply])
+                             
+      WebsocketRails["timeline_" + params[:id]].trigger(params[:timeline_id] + '_reply', {
+        id: tl.id,
+        image: User.where(:id => params[:user_id]).take.image.url,
+        nickname: User.where(:id => params[:user_id]).take.nickname,
+        reply: params[:reply],
+        time: tl.created_at.in_time_zone("Seoul").iso8601 
+      })
+      render :text => ""
+  end
+  
+  def timeline_editor 
+    @edit = Timeline.where(:id => params[:id]).take
+    
+  end
+  
+  def timeline_editing
+    edit = Timeline.where(:id => params[:id]).take
+      if edit.user_id == current_user.id
+      edit.title = params[:title]
+      edit.text = params[:text]
+      edit.button = params[:button]
+        unless params[:image].nil?
+        edit.image = params[:image]
+        end
+      edit.save
+      end
+        render text: "<link rel='stylesheet' href='https://bootswatch.com/flatly/bootstrap.min.css'>
+                      <div class='container'><h1><center>게시글이 수정되었습니다.</h1><br><center><button class='btn btn-lg btn-default' onclick='self.close()'>창닫기"
+  end
+  
+  def timeline_reply_destroying
+    destroy = TimelineReply.where(:id => params[:id]).take
+      if destroy.nil? #챗이 없어진경우
+      else
+        if destroy.user_id == current_user.id
+        destroy.destroy
+        end
+      end
+      redirect_to :back
   end
   
   def chat_making
@@ -184,22 +223,38 @@ class HomeController < ApplicationController
         edit.image = params[:image]
         end
       edit.save
+        render text: "<link rel='stylesheet' href='https://bootswatch.com/flatly/bootstrap.min.css'>
+                      <div class='container'><h1><center>챗이 수정되었습니다.</h1><br><center><button class='btn btn-lg btn-default' onclick='self.close()'>창닫기"
       end
-    redirect_to '/'
   end
   
+  def timeline_destroying
+    destroy = Timeline.where(:id => params[:id]).take
+      if destroy.nil? #챗이 없어진경우
+      else
+        if destroy.user_id == current_user.id
+        destroy.destroy
+        Timeline.where(:channel_id => params[:id]).all.destroy
+        TimelineReply.where(:channel_id => params[:id]).all.destroy
+        end
+      end
+        render text: "<link rel='stylesheet' href='https://bootswatch.com/flatly/bootstrap.min.css'>
+                      <div class='container'><h1><center>게시글이 삭제되었습니다.</h1><br><center><button class='btn btn-lg btn-default' onclick='self.close()'>창닫기"
+  end
   def chat_destroying
     destroy = Channel.where(:id => params[:id]).take
       if destroy.nil? #챗이 없어진경우
-        render text: "<link rel='stylesheet' href='https://bootswatch.com/flatly/bootstrap.min.css'>
-                      <div class='container'><h1><center>챗이 삭제되었습니다.</h1><br><center><button class='btn btn-lg btn-default' onclick='self.close()'>창닫기"
       else
         if destroy.user_id == current_user.id
         destroy.destroy
         ChatLog.where(:channel_id => params[:id]).all.destroy
         ChannelJoiner.where(:channel_id => params[:id]).all.destroy
+        Timeline.where(:channel_id => params[:id]).all.destroy
+        TimelineReply.where(:channel_id => params[:id]).all.destroy
         end
       end
+        render text: "<link rel='stylesheet' href='https://bootswatch.com/flatly/bootstrap.min.css'>
+                      <div class='container'><h1><center>챗이 삭제되었습니다.</h1><br><center><button class='btn btn-lg btn-default' onclick='self.close()'>창닫기"
   end
   
   def type_edit
