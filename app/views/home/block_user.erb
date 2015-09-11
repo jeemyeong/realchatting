@@ -1,0 +1,10 @@
+<div class='container'>
+<h1><center><%=@user.nickname%>님을 차단하시겠습니까?</h1><br>
+    <center>
+      <%= form_tag "/home/blocking_user/"+ @user.id.to_s, method: "post", class: "form-signin" do %>
+          <input type="hidden" name="user_id" value="<%=current_user.id%>">
+          <button class='btn btn-lg btn-default'>차단</button>
+      <% end %>
+          <button class='btn btn-lg btn-default' onclick='self.close()'>취소</button>
+    </center>
+</div>

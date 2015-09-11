@@ -10,4 +10,5 @@ has_many :chat_logs
 has_many :channel_joiners
 has_many :timelines
 has_many :timeline_replies
+has_many :user_blocks
 end

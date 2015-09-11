@@ -62,6 +62,35 @@ class HomeController < ApplicationController
       unless ChannelJoiner.where(:channel_id => params[:id]).where.not(updated_at: (Time.now - 30)..Time.now).take.nil?  #30초가 넘게 업데이트가 안된 db는
              ChannelJoiner.where(:channel_id => params[:id]).where.not(updated_at: (Time.now - 30)..Time.now).delete_all #다 지우자
       end
+      
+      if user_signed_in?
+        @block_user = Hash.new
+        if UserBlock.where(:user_id => current_user.id, :block_guest_id => nil).take.nil?
+        else
+          for g in 0..UserBlock.where(:user_id => current_user.id, :block_guest_id => nil).count.to_i-1
+        block_user_id = UserBlock.where(:user_id => current_user.id, :block_guest_id => nil).at(g).block_user_id
+           if User.where(:id => block_user_id).take.image.thumb.url.nil?
+              block_user_image = "/assets/user_image.jpg"
+           else
+              block_user_image = User.where(:id => params[:user_id]).take.image.thumb.url
+           end
+        block_user_nickname = User.where(:id => block_user_id).take.nickname
+        @block_user[block_user_id] = [block_user_nickname, block_user_image]
+          end
+        end
+        
+        @block_guest = Hash.new
+        if UserBlock.where(:user_id => current_user.id, :block_user_id => nil).take.nil?
+        else
+          for g in 0..UserBlock.where(:user_id => current_user.id, :block_user_id => nil).count.to_i-1
+        block_guest_id = UserBlock.where(:user_id => current_user.id, :block_user_id => nil).at(g).block_guest_id
+        block_guest_ip_address = Guest.where(:id => block_guest_id).take.ip_address.reverse[0..2]
+        @block_guest[block_guest_id] = block_guest_ip_address
+          end
+        end
+        
+      end
+      
   end
   
   def channel_joiners
@@ -125,10 +154,19 @@ class HomeController < ApplicationController
       
       if params[:user_id].nil?
           WebsocketRails["chat_" + params[:id]].trigger('chat', {
-              nickname: "<img src='/assets/hand.jpg' class='img-circle' style='height:30px; width:30px;'>(" + Guest.where(:id => params[:guest_id]).take.ip_address.to_s.reverse[0..2] + ")",
+              id: cl.id.to_s,
+              guest_id: "guest_" + cl.guest_id.to_s,
+              nickname: "<img src='/assets/hand.jpg' class='img-circle' style='height:30px; width:30px;'>  (" + Guest.where(:id => params[:guest_id]).take.ip_address.to_s.reverse[0..2] + ")  ",
               msg: params[:msg],
               count: ChatLog.where(:channel_id => params[:channel_id]).count.to_s,
-              time: cl.created_at.in_time_zone("Seoul").iso8601
+              time: cl.created_at.in_time_zone("Seoul").iso8601,
+              ul: '<ul class="dropdown-menu" aria-labelledby="dropdownMenu_' + cl.id.to_s + '">
+                      <li><a href="/home/block_guest/' + cl.guest.id.to_s + '" target="_blank">손님(' + Guest.where(:id => params[:guest_id]).take.ip_address.to_s.reverse[0..2] +') 차단하기</a></li>
+                      <li><a href="#">Another action</a></li>
+                      <li><a href="#">Something else here</a></li>
+                      <li role="separator" class="divider"></li>
+                      <li><a href="#">Separated link</a></li>
+                    </ul>'
           })
       else
            if User.where(:id => params[:user_id]).take.image.thumb.url.nil?
@@ -137,10 +175,19 @@ class HomeController < ApplicationController
               user_image = User.where(:id => params[:user_id]).take.image.thumb.url
            end
           WebsocketRails["chat_" + params[:id]].trigger('chat', {
-              nickname: "<img src='" + user_image +  "' class='img-circle' style='height:30px; width:30px;'><b>" + User.where(:id => params[:user_id]).take.nickname + "</b>",
+              id: cl.id.to_s,
+              user_id: "user_" + cl.user_id.to_s,
+              nickname: "<img src='" + user_image +  "' class='img-circle' style='height:30px; width:30px;'><b>  " + User.where(:id => params[:user_id]).take.nickname + "</b>  ",
               msg: params[:msg],
               count: ChatLog.where(:channel_id => params[:channel_id]).count.to_s,
-              time: cl.created_at.in_time_zone("Seoul").iso8601 
+              time: cl.created_at.in_time_zone("Seoul").iso8601,
+              ul: '<ul class="dropdown-menu" aria-labelledby="dropdownMenu_' + cl.id.to_s + '">
+                      <li><a href="/home/block_user/' + cl.user.id.to_s + '" target="_blank">' + User.where(:id => params[:user_id]).take.nickname + ' 차단하기</a></li>
+                      <li><a href="#">Another action</a></li>
+                      <li><a href="#">Something else here</a></li>
+                      <li role="separator" class="divider"></li>
+                      <li><a href="#">Separated link</a></li>
+                    </ul>'
           })
       end
     
@@ -262,4 +309,52 @@ class HomeController < ApplicationController
     edit.mediatype = params[:mediatype]
     edit.save
   end
+  
+  def block_user
+    @user = User.where(:id => params[:id]).take
+  end
+  
+  def block_guest
+    @guest = Guest.where(:id => params[:id]).take
+  end
+  
+  def blocking_user
+    if UserBlock.where(:user_id => params[:user_id], :block_user_id => params[:id]).take.nil?
+           UserBlock.create(user_id: params[:user_id], block_user_id: params[:id])
+    end
+        render text: "<link rel='stylesheet' href='https://bootswatch.com/flatly/bootstrap.min.css'>
+                      <div class='container'><h1><center> 차단했습니다.</h1><br><center><button class='btn btn-lg btn-default' onclick='self.close()'>창닫기"
+  end
+  def blocking_guest
+    if UserBlock.where(:user_id => params[:user_id], :block_guest_id => params[:id]).take.nil?
+           UserBlock.create(user_id: params[:user_id], block_guest_id: params[:id])
+    end
+        render text: "<link rel='stylesheet' href='https://bootswatch.com/flatly/bootstrap.min.css'>
+                      <div class='container'><h1><center> 차단했습니다.</h1><br><center><button class='btn btn-lg btn-default' onclick='self.close()'>창닫기"
+  end
+  
+  def unblock_user
+    @user = User.where(:id => params[:id]).take
+  end
+  
+  def unblock_guest
+    @guest = Guest.where(:id => params[:id]).take
+  end
+  
+  def unblocking_user
+    unless UserBlock.where(:user_id => params[:user_id], :block_user_id => params[:id]).take.nil?
+           UserBlock.where(:user_id => params[:user_id], :block_user_id => params[:id]).take.destroy
+    end
+        render text: "<link rel='stylesheet' href='https://bootswatch.com/flatly/bootstrap.min.css'>
+                      <div class='container'><h1><center> 차단해제되었습니다.</h1><br><center><button class='btn btn-lg btn-default' onclick='self.close()'>창닫기"
+  end
+  
+  def unblocking_guest
+    unless UserBlock.where(:user_id => params[:user_id], :block_guest_id => params[:id]).take.nil?
+           UserBlock.where(:user_id => params[:user_id], :block_guest_id => params[:id]).take.destroy
+    end
+        render text: "<link rel='stylesheet' href='https://bootswatch.com/flatly/bootstrap.min.css'>
+                      <div class='container'><h1><center> 차단해제되었습니다.</h1><br><center><button class='btn btn-lg btn-default' onclick='self.close()'>창닫기"
+  end
+  
 end

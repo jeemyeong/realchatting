@@ -1,6 +1,6 @@
 Rails.application.configure do
   config.middleware.delete Rack::Lock
-  config.action_mailer.default_url_options = { host: 'realchatting-ljm901011.c9.io', port: 80 }
+  config.action_mailer.default_url_options = { host: 'realchat-ljm901011.c9.io', port: 80 }
 
 config.action_mailer.delivery_method = :mailgun
 config.action_mailer.mailgun_settings = {

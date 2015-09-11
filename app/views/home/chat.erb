@@ -6,7 +6,11 @@ body {
 #chatlogs { position:relative; margin:1px auto; padding:20px; height: 800px; overflow: hidden; border-width: 5px;}
 #timeline { position:relative; margin:1px auto; padding:10px; height: 800px; overflow: hidden; border-width: 5px;}
 }  
-
+.dropdown-menu {
+ position: relative;
+ float: none;
+ max-width: 200px;
+}
 </style>
 
 <div class="container-fluid">
@@ -24,27 +28,73 @@ body {
           <!--챗 수정 끝-->
       </div>
       <div class="modal-header form-signin-heading">
+          <!--차단관리-->
+          <% unless current_user.nil? %>
+              <a class="badge" id="block_edit" style="font-size:16px; color:white; float:right;"><b>차단 유져</b></a>
+          <% end %>
+          <!--차단관리 끝-->
         <ul id="users" style="padding-left: 0px;">
             <h4>현재 접속자<span class="badge" style="font-size:20px"><div id="count"><div class="detach_count"><%=@channel.channel_joiners.all.count%></div></div></span></h4>
             <div class="detach_user">
               <% @channel_user_joiner.each do |u|%>
-                <img src="<%=u.user.image.thumb.url ? u.user.image.thumb : "/assets/user_image.jpg"%>" class="img-circle" style="height:30px; width:30px;"><b><%=u.user.nickname %></b><span style="font-size:10px;">(<abbr class="timeago" title="<%=u.created_at.in_time_zone("Seoul").iso8601%>"><%=u.created_at.in_time_zone("Seoul").iso8601%></abbr>)</span>
+                <div class="user_<%=u.user.id%>"><img src="<%=u.user.image.thumb.url ? u.user.image.thumb : "/assets/user_image.jpg"%>" class="img-circle" style="height:30px; width:30px;"><b><%=u.user.nickname %></b><span style="font-size:10px;">(<abbr class="timeago" title="<%=u.created_at.in_time_zone("Seoul").iso8601%>"><%=u.created_at.in_time_zone("Seoul").iso8601%></abbr>)</span></div>
               <% end %>
               <% @channel_guest_joiner.each do |u|%>
-                <img src='/assets/hand.jpg' class='img-circle' style='height:30px; width:30px;'>손님(<%=u.guest.ip_address.reverse[0..2] %>)<span style="font-size:10px;">(<abbr class="timeago" title="<%=u.created_at.in_time_zone("Seoul").iso8601%>"><%=u.created_at.in_time_zone("Seoul").iso8601%></abbr>)</span>
+                <div class="guest_<%=u.guest.id%>"><img src='/assets/hand.jpg' class='img-circle' style='height:30px; width:30px;'>손님(<%=u.guest.ip_address.reverse[0..2] %>)<span style="font-size:10px;">(<abbr class="timeago" title="<%=u.created_at.in_time_zone("Seoul").iso8601%>"><%=u.created_at.in_time_zone("Seoul").iso8601%></abbr>)</span></div>
               <% end %>
-            </div id="detach_user">
+            </div>
         </ul>
       </div>
-      
       <div class="modal-header form-signin-heading" id="allchat_content"><!--chat content-->
         <ul id="logs" style="padding-left: 0px;">
           <% @channel.chat_logs.last(15).each do |c| %> <!--일단 15개만 보여주는걸로 하자-->
         		
               <% if c.user_id == nil %>
-                <div class="detach_chat row" style="padding-bottom:10px;"><img src='/assets/hand.jpg' class='img-circle' style='height:30px; width:30px;'>(<%=c.guest.ip_address.reverse[0..2]%>)<span class="shuffle msg"><%=c.msg %></span><abbr class="timeago" style="font-size:12px; float:right;" title="<%=c.created_at.in_time_zone("Seoul").iso8601 %>"><%=c.created_at.in_time_zone("Seoul").iso8601%></abbr><br></div>
+                <div class="detach_chat row guest_<%=c.guest.id%>" style="padding-bottom:10px;">
+                  <span <% if user_signed_in? %> class="dropdown-toggle" type="button" id="dropdownMenu_<%=c.id%>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" <% end %> >
+                  <img src='/assets/hand.jpg' class='img-circle' style='height:30px; width:30px;'>
+                    (<%=c.guest.ip_address.reverse[0..2]%>)
+                  </span>
+                  <span class="shuffle msg">
+                    <%=c.msg %>
+                  </span>
+                  <abbr class="timeago" style="font-size:12px; float:right;" title="<%=c.created_at.in_time_zone("Seoul").iso8601 %>">
+                    <%=c.created_at.in_time_zone("Seoul").iso8601%>
+                  </abbr>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu_<%=c.id%>">
+                      <li><a href="/home/block_guest/<%=c.guest.id%>" target="_blank">손님(<%=c.guest.ip_address.reverse[0..2]%>) 차단하기</a></li>
+                      <li><a href="#">Another action</a></li>
+                      <li><a href="#">Something else here</a></li>
+                      <li role="separator" class="divider"></li>
+                      <li><a href="#">Separated link</a></li>
+                    </ul>
+                  <br>
+                </div>
               <% else %>
-                <div class="detach_chat row" style="padding-bottom:10px;"><img src="<%=c.user.image.thumb.url ? c.user.image.thumb : "/assets/user_image.jpg"%>" class="img-circle" style="height:30px; width:30px;"><b><%=c.user.nickname %></b><span class="shuffle msg"><%=c.msg %></span><abbr class="timeago" style="font-size:12px; float:right;" title="<%=c.created_at.in_time_zone("Seoul").iso8601 %>"><%=c.created_at.in_time_zone("Seoul").iso8601%></abbr><br></div>
+                <div class="detach_chat row user_<%=c.user.id%>" style="padding-bottom:10px;">
+                  <span <% if user_signed_in? %> class="dropdown-toggle" type="button" id="dropdownMenu_<%=c.id%>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" <% end %>>
+                  <img src="<%=c.user.image.thumb.url ? c.user.image.thumb : "/assets/user_image.jpg"%>" class="img-circle" style="height:30px; width:30px;">
+                  <b><%=c.user.nickname %></b>
+                  </span>
+                  <span class="shuffle msg">
+                    <%=c.msg %>
+                  </span>
+                  <abbr class="timeago" style="font-size:12px; float:right;" title="<%=c.created_at.in_time_zone("Seoul").iso8601 %>">
+                    <%=c.created_at.in_time_zone("Seoul").iso8601%>
+                  </abbr>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu_<%=c.id%>">
+                      <% unless current_user.nil? %>
+                        <% unless c.user.id == current_user.id %>
+                          <li><a href="/home/block_user/<%=c.user.id%>" target="_blank"><%=c.user.nickname %> 차단하기</a></li>
+                        <% end %>
+                      <% end %>
+                      <li><a href="#">Another action</a></li>
+                      <li><a href="#">Something else here</a></li>
+                      <li role="separator" class="divider"></li>
+                      <li><a href="#">Separated link</a></li>
+                    </ul>
+                  <br>
+                </div>
               <% end %>
             
           <% end %>
@@ -74,7 +124,7 @@ body {
       	</div>
       	
       	<% @channel.timelines.reverse.each do |t| %>
-      	<div class="cd-timeline-block">
+      	<div class="cd-timeline-block user_<%=t.user.id%>">
           <a href="#<%=t.id%>_timeline" data-toggle="collapse">
       		<div class="cd-timeline-img" style="background:#<%=["75ce66","c03b44","f0ca45"].sample(1).join('')%>">
       			<span class="glyphicon glyphicon-<%=t.button%> glyphicon-center" aria-hidden="true"></span>
@@ -99,7 +149,7 @@ body {
               <div class="collapse" style="border-top: 1px solid #e5e5e5; margin-top:50px;" id="<%=t.id%>_repl">
                 <ul id="<%=t.id%>_replies" style="padding-left: 0px;">
                 <% t.timeline_replies.each do |r| %>
-                  <p style="font-size:15px;">
+                  <p style="font-size:15px;" class="user_<%=r.user.id%>">
                     <img src="<%=r.user.image.thumb.url ? r.user.image.thumb : "/assets/user_image.jpg"%>" class="img-circle" style="height:18px; width:18px;">
                     <%=r.user.nickname%> : <span class="<%=t.id%>_reply"><%=r.reply%></span>
                     <a href="/home/timeline_reply_destroying/<%=t.id%>" style="float:right;margin-left:10px;"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
@@ -122,9 +172,6 @@ body {
       	</div> <!-- cd-timeline-block -->
       	<% end %>
       	
-      	<div class="cd-timeline-block">
-      		<!-- ... -->
-      	</div>
       </section>
     </div>
   </div>
@@ -151,6 +198,39 @@ body {
           <button class="btn btn-sm btn-primary" style="margin-left:0px;">챗 수정하기</button>
         </div>
       <% end %>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" id="block_editor" >
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="form-signin">
+        <div class="modal-header">
+          <h2 class="modal-title form-signin-heading"><b>차단 유져</b></h2>
+        </div>
+        <div class="modal-body">
+          <% unless @block_user.nil? %>
+            <% @block_user.each do |id, nickname| %>
+              <img src="<%=nickname.second%>" class='img-circle' style='height:30px; width:30px;'><b style="font-size:17px;"><%=nickname.first%></b><a href="/home/unblock_user/<%=id%>" target="_blank"><span class="glyphicon glyphicon-remove" style="float:right;" aria-hidden="true"></span></a>
+              <br>
+            <% end %>
+          <% end %>
+          
+          <% unless @block_guest.nil? %>
+            <% @block_guest.each do |id, ip_address| %>
+              <img src='/assets/hand.jpg' class='img-circle' style='height:30px; width:30px;'><span style="font-size:17px;">손님(<%=ip_address%>)</span><a href="/home/unblock_guest/<%=id%>" target="_blank"><span class="glyphicon glyphicon-remove" style="float:right;" aria-hidden="true"></span></a>
+              <br>
+            <% end %>
+          <% end %>
+          <br>
+        </div>
+        <div class="modal-footer">
+          <a href="/home/chat_destroying/<%=@channel.id%>" class="btn btn-sm btn-default">챗방 폭파</a>
+          <button class="btn btn-sm btn-default" style="margin-left:0px;" data-dismiss="modal">취소</button>
+          <button class="btn btn-sm btn-primary" style="margin-left:0px;">챗 수정하기</button>
+        </div>
+      </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
@@ -203,7 +283,7 @@ body {
 
 <script>
 $(function() {
-  var websocket = new WebSocketRails('realchatting-ljm901011.c9.io/websocket');
+  var websocket = new WebSocketRails('realchat-ljm901011-5.c9.io/websocket');
   var channel = websocket.subscribe("chat_<%=@channel.id%>");  
   var user = websocket.subscribe("user_<%=@channel.id%>");  
   var timeline = websocket.subscribe("timeline_<%=@channel.id%>");  
@@ -219,8 +299,11 @@ $(function() {
   $("#chat_edit").click(function(){ //챗방 수정
          $('#chat_editor').modal();
   })
-  $("#timeline_write").click(function(){ //챗방 수정
+  $("#timeline_write").click(function(){ //타임라인 글쓰기
          $('#timeline_maker').modal();
+  })
+  $("#block_edit").click(function(){ //차단 유져
+         $('#block_editor').modal();
   })
     
  
@@ -293,14 +376,26 @@ $(function() {
     <% end %> // 타임라인 끝
     
   channel.bind('chat', function(data) {  // 채널에서 오는 데이터를 붙이자
-    $("#logs").append('<div class="detach_chat row" style="padding-bottom:10px;">' + data.nickname + 
-                      '<span class="shuffle msg">' + data.msg + '</span><abbr class="timeago" style="font-size:5px; float:right;" title="'+data.time+'">'
-                      + data.time +  '</abbr><br></div>');
+    $("#logs").append('<div class="detach_chat row ' + data.user_id + " " + data.guest_id + '" style="padding-bottom:10px;"><span <% if user_signed_in? %> class="dropdown-toggle" type="button" id="dropdownMenu_'+data.id+'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" <% end %> >   ' + data.nickname + 
+                      '  </span><span class="shuffle msg"> ' + data.msg + ' </span><abbr class="timeago" style="font-size:5px; float:right;" title="'+data.time+'">'
+                      + data.time +  '</abbr>'+ data.ul +'<br></div>');
     if(data.count>=50)  // 채팅이 50개 이상이라면
     {$('.detach_chat').first().detach();} // 맨윗채팅을 떼자
     $('.shuffle').last().shuffleLetters();
     $("#btn-input").focus(); // 채팅입력화면으로 가자
     $("abbr.timeago").timeago(); // ago 형태로 바꿔준다.
+
+      <% unless @block_user.nil? %>
+        <% @block_user.each do |bu| %>
+          $('.user_<%=bu%>').detach(); // 차단된 유져 모두 detach
+        <% end %>
+      <% end %>
+      
+      <% unless @block_guest.nil? %>
+        <% @block_guest.each do |bg| %>
+          $('.guest_<%=bg%>').detach(); // 차단된 게스트 모두 detach
+        <% end %>
+      <% end %>
   }); //데이터 붙이기 끝
   
     $("abbr.timeago").timeago(); //시간을 ago로 보여주자
@@ -335,9 +430,19 @@ $(function() {
   
   $("#chatlogs").perfectScrollbar(); //챗로그 스크롤바
   $("#timeline").perfectScrollbar(); //타임라인 스크롤바
+
+  <% unless @block_user.nil? %>
+    <% @block_user.keys.each do |bu| %>
+      $('.user_<%=bu%>').detach(); // 차단된 유져 모두 detach
+    <% end %>
+  <% end %>
   
-  // $("#selectBox option:selected").click(function(){
-  // })
+  <% unless @block_guest.nil? %>
+    <% @block_guest.keys.each do |bg| %>
+      $('.guest_<%=bg%>').detach(); // 차단된 게스트 모두 detach
+    <% end %>
+  <% end %>
+  
     
 });
 </script>

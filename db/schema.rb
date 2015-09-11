@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150905164325) do
+ActiveRecord::Schema.define(version: 20150909040722) do
 
   create_table "admins", force: :cascade do |t|
     t.string   "nickname",               default: "", null: false
@@ -83,6 +83,14 @@ ActiveRecord::Schema.define(version: 20150905164325) do
     t.string   "image"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "user_blocks", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "block_user_id"
+    t.integer  "block_guest_id"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
   end
 
   create_table "users", force: :cascade do |t|

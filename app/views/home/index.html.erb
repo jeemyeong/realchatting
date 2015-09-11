@@ -63,7 +63,7 @@
                 <div id="logs">
                   <% @banner.chat_logs.last(10).each do |c| %> <!--10개만 보여주자--> 
                     <% if c.user_id == nil %>
-                      <div class="detach row">
+                      <div class="detach row guest_<%=c.guest.id%>">
                         <div class="col-lg-12 col-md-12" style="margin-bottom:5px;">
                           <div class="col-lg-2 col-md-2" style="font-size:13px;"><img src="/assets/hand.jpg" class="img-circle" style="height:30px; width:30px;">(<%=c.guest.ip_address.reverse[0..2]%>)</div>
                           <div class="shuffle msg col-lg-8 col-md-8"><%=c.msg %></div>
@@ -71,9 +71,9 @@
                         </div>
                       </div>
                     <% else %>
-                      <div class="detach row">
+                      <div class="detach row user_<%=c.user.id%>">
                         <div class="col-lg-12 col-md-12" style="margin-bottom:5px;">
-                          <div class="col-lg-2 col-md-2" style="font-size:14px;"><img src="<%=c.user.image.thumb.url ? c.user.image.thumb : "/assets/user_image.jpg"%>" class="img-circle" style="height:30px; width:30px;"><b><%=c.user.nickname %></b></div>
+                          <div class="col-lg-2 col-md-2" style="font-size:13px;"><img src="<%=c.user.image.thumb.url ? c.user.image.thumb : "/assets/user_image.jpg"%>" class="img-circle" style="height:30px; width:30px;"><b><%=c.user.nickname %></b></div>
                           <div class="shuffle msg col-lg-8 col-md-8"><%=c.msg %></div>
                           <div class="col-lg-2 col-md-2" style="text-align:right; font-size:5px;"><abbr class="timeago" title="<%=c.created_at.in_time_zone("Seoul").iso8601 %>"><%=c.created_at.in_time_zone("Seoul").iso8601 %></abbr></div>
                         </div>
@@ -92,7 +92,7 @@
                 <span class="badge" style="font-size:12px"><div id="count_<%=c.id%>"><div class="detach_count_<%=c.id%>"><%=c.channel_joiners.all.count%></div></div></span></a></center>
                   <% c.chat_logs.last(3).each do |cl| %> <!--3개만 보여주자-->
                     <% if cl.user_id == nil %>
-                      <div class="detach_<%=c.id%> row" style="padding-top:3px;">
+                      <div class="detach_<%=c.id%> row guest_<%=cl.guest.id%>" style="padding-top:3px;">
                         <div class="col-lg-12 col-md-12" style="margin-bottom:5px;">
                           <div class="col-lg-3 col-md-3" style="font-size:12px; padding: 0px 0px 0px 0px;"><img src="/assets/hand.jpg" class="img-circle" style="height:30px; width:30px;">(<%=cl.guest.ip_address.reverse[0..2]%>)</div>
                           <div class="shuffle_<%=c.id%> msg col-lg-7 col-md-7" style="padding-right:0px;"><%=cl.msg %></div>
@@ -100,7 +100,7 @@
                         </div>
                       </div>
                     <% else %>
-                      <div class="detach_<%=c.id%> row" style="padding-top:3px;">
+                      <div class="detach_<%=c.id%> row user_<%=cl.user.id%>" style="padding-top:3px;">
                         <div class="col-lg-12 col-md-12" style="margin-bottom:5px;">
                           <div class="col-lg-3 col-md-3" style="font-size:12px; padding: 0px 0px 0px 0px;"><img src="<%=cl.user.image.thumb.url ? cl.user.image.thumb : "/assets/user_image.jpg"%>" class="img-circle" style="height:30px; width:30px;"><b><%=cl.user.nickname %></b></div>
                           <div class="shuffle_<%=c.id%> msg col-lg-7 col-md-7" style="padding-right:0px;"><%=cl.msg %></div>
@@ -150,7 +150,7 @@
 <script>
   $(function() {
     $("abbr.timeago").timeago(); //ago형태로 바꿔준다.
-    var websocket = new WebSocketRails('realchatting-ljm901011.c9.io/websocket');
+    var websocket = new WebSocketRails('realchat-ljm901011-5.c9.io/websocket');
                 
     $("#popular").Morphext({ //인기 채팅방 텍스트 스타일
         animation: "flash",
@@ -169,7 +169,7 @@
     var channel = websocket.subscribe("chat_<%=@banner.id%>");  //웹소켓에서 banner.id로 데이터를 받자
     channel.bind('chat', function(data) {  // 채널에서 오는 데이터를 붙이자.
              $("#logs").append('<div class="detach row"><div class="col-lg-12 col-md-12" style="margin-bottom:5px;">\
-                                <div class="col-lg-2 col-md-2" style="font-size:14px;">' + data.nickname + '</div>\
+                                <div class="col-lg-2 col-md-2" style="font-size:13px;">' + data.nickname + '</div>\
                                 <div class="shuffle msg col-lg-6 col-md-6">' + data.msg + '</div>\
                                 <div class="col-lg-4 col-md-4" style="text-align:right; font-size:5px;"><abbr class="timeago" title="' + data.time + '">' + data.time + '</abbr></div></div></div>');
                         if(data.count>=10)  // 채팅이 10개 이상이라면
