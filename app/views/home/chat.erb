@@ -283,7 +283,8 @@ body {
 
 <script>
 $(function() {
-  var websocket = new WebSocketRails('realchat-ljm901011-5.c9.io/websocket');
+  var url      = window.location.host + '/websocket';
+  var websocket = new WebSocketRails(url);
   var channel = websocket.subscribe("chat_<%=@channel.id%>");  
   var user = websocket.subscribe("user_<%=@channel.id%>");  
   var timeline = websocket.subscribe("timeline_<%=@channel.id%>");  

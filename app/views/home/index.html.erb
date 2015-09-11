@@ -65,7 +65,7 @@
                     <% if c.user_id == nil %>
                       <div class="detach row guest_<%=c.guest.id%>">
                         <div class="col-lg-12 col-md-12" style="margin-bottom:5px;">
-                          <div class="col-lg-2 col-md-2" style="font-size:13px;"><img src="/assets/hand.jpg" class="img-circle" style="height:30px; width:30px;">(<%=c.guest.ip_address.reverse[0..2]%>)</div>
+                          <div class="col-lg-2 col-md-2" style="font-size:12px;"><img src="/assets/hand.jpg" class="img-circle" style="height:30px; width:30px;"> (<%=c.guest.ip_address.reverse[0..2]%>) </div>
                           <div class="shuffle msg col-lg-8 col-md-8"><%=c.msg %></div>
                           <div class="col-lg-2 col-md-2" style="text-align:right; font-size:5px;"><abbr class="timeago" title="<%=c.created_at.in_time_zone("Seoul").iso8601 %>"><%=c.created_at.in_time_zone("Seoul").iso8601 %></abbr></div>
                         </div>
@@ -73,7 +73,7 @@
                     <% else %>
                       <div class="detach row user_<%=c.user.id%>">
                         <div class="col-lg-12 col-md-12" style="margin-bottom:5px;">
-                          <div class="col-lg-2 col-md-2" style="font-size:13px;"><img src="<%=c.user.image.thumb.url ? c.user.image.thumb : "/assets/user_image.jpg"%>" class="img-circle" style="height:30px; width:30px;"><b><%=c.user.nickname %></b></div>
+                          <div class="col-lg-2 col-md-2" style="font-size:12px;"><img src="<%=c.user.image.thumb.url ? c.user.image.thumb : "/assets/user_image.jpg"%>" class="img-circle" style="height:30px; width:30px;"><b> <%=c.user.nickname %> </b>  </div>
                           <div class="shuffle msg col-lg-8 col-md-8"><%=c.msg %></div>
                           <div class="col-lg-2 col-md-2" style="text-align:right; font-size:5px;"><abbr class="timeago" title="<%=c.created_at.in_time_zone("Seoul").iso8601 %>"><%=c.created_at.in_time_zone("Seoul").iso8601 %></abbr></div>
                         </div>
@@ -150,8 +150,9 @@
 <script>
   $(function() {
     $("abbr.timeago").timeago(); //ago형태로 바꿔준다.
-    var websocket = new WebSocketRails('realchat-ljm901011-5.c9.io/websocket');
-                
+    var url      = window.location.host + '/websocket';
+    var websocket = new WebSocketRails(url);
+    
     $("#popular").Morphext({ //인기 채팅방 텍스트 스타일
         animation: "flash",
         speed: 3000,
@@ -169,7 +170,7 @@
     var channel = websocket.subscribe("chat_<%=@banner.id%>");  //웹소켓에서 banner.id로 데이터를 받자
     channel.bind('chat', function(data) {  // 채널에서 오는 데이터를 붙이자.
              $("#logs").append('<div class="detach row"><div class="col-lg-12 col-md-12" style="margin-bottom:5px;">\
-                                <div class="col-lg-2 col-md-2" style="font-size:13px;">' + data.nickname + '</div>\
+                                <div class="col-lg-2 col-md-2" style="font-size:12px;">' + data.nickname + '</div>\
                                 <div class="shuffle msg col-lg-6 col-md-6">' + data.msg + '</div>\
                                 <div class="col-lg-4 col-md-4" style="text-align:right; font-size:5px;"><abbr class="timeago" title="' + data.time + '">' + data.time + '</abbr></div></div></div>');
                         if(data.count>=10)  // 채팅이 10개 이상이라면
