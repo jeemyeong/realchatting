@@ -35,12 +35,20 @@ body {
           <!--차단관리 끝-->
         <ul id="users" style="padding-left: 0px;">
             <h4>현재 접속자<span class="badge" style="font-size:20px"><div id="count"><div class="detach_count"><%=@channel.channel_joiners.all.count%></div></div></span></h4>
-            <div class="detach_user">
+            <div class="detach_user row">
               <% @channel_user_joiner.each do |u|%>
-                <div class="user_<%=u.user.id%>"><img src="<%=u.user.image.thumb.url ? u.user.image.thumb : "/assets/user_image.jpg"%>" class="img-circle" style="height:30px; width:30px;"><b><%=u.user.nickname %></b><span style="font-size:10px;">(<abbr class="timeago" title="<%=u.created_at.in_time_zone("Seoul").iso8601%>"><%=u.created_at.in_time_zone("Seoul").iso8601%></abbr>)</span></div>
+                <div class="user_<%=u.user.id%> col-xs-2" style="padding:0px 0px 0px 0px;">
+                    <img src="<%=u.user.image.thumb.url ? u.user.image.thumb : "/assets/user_image.jpg"%>" class="img-circle" style="height:30px; width:30px;">
+                    <b><%=u.user.nickname %></b>
+                  <span style="font-size:10px;">(<abbr class="timeago" title="<%=u.created_at.in_time_zone("Seoul").iso8601%>"><%=u.created_at.in_time_zone("Seoul").iso8601%></abbr>)</span>
+                </div>
               <% end %>
               <% @channel_guest_joiner.each do |u|%>
-                <div class="guest_<%=u.guest.id%>"><img src='/assets/hand.jpg' class='img-circle' style='height:30px; width:30px;'>손님(<%=u.guest.ip_address.reverse[0..2] %>)<span style="font-size:10px;">(<abbr class="timeago" title="<%=u.created_at.in_time_zone("Seoul").iso8601%>"><%=u.created_at.in_time_zone("Seoul").iso8601%></abbr>)</span></div>
+                <div class="guest_<%=u.guest.id%> col-xs-2" style="padding:0px 0px 0px 0px;">
+                  <img src='/assets/hand.jpg' class='img-circle' style='height:30px; width:30px;'>
+                    (<%=u.guest.ip_address.reverse[0..2] %>)
+                  <span style="font-size:10px;">(<abbr class="timeago" title="<%=u.created_at.in_time_zone("Seoul").iso8601%>"><%=u.created_at.in_time_zone("Seoul").iso8601%></abbr>)</span>
+                </div>
               <% end %>
             </div>
         </ul>
@@ -62,7 +70,7 @@ body {
                     <%=c.created_at.in_time_zone("Seoul").iso8601%>
                   </abbr>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu_<%=c.id%>">
-                      <li><a href="/home/block_guest/<%=c.guest.id%>" target="_blank">손님(<%=c.guest.ip_address.reverse[0..2]%>) 차단하기</a></li>
+                      <li><a href="/home/block_guest/<%=c.guest.id%>" target="popup" onclick="window.open('/home/block_guest/<%=c.guest.id%>','name','width=600,height=400')">손님(<%=c.guest.ip_address.reverse[0..2]%>) 차단하기</a></li>
                       <li><a href="#">Another action</a></li>
                       <li><a href="#">Something else here</a></li>
                       <li role="separator" class="divider"></li>
@@ -85,7 +93,7 @@ body {
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu_<%=c.id%>">
                       <% unless current_user.nil? %>
                         <% unless c.user.id == current_user.id %>
-                          <li><a href="/home/block_user/<%=c.user.id%>" target="_blank"><%=c.user.nickname %> 차단하기</a></li>
+                          <li><a href="/home/block_user/<%=c.user.id%>" target="popup" onclick="window.open('/home/block_user/<%=c.user.id%>','name','width=600,height=400')"><%=c.user.nickname %> 차단하기</a></li>
                         <% end %>
                       <% end %>
                       <li><a href="#">Another action</a></li>
@@ -212,23 +220,21 @@ body {
         <div class="modal-body">
           <% unless @block_user.nil? %>
             <% @block_user.each do |id, nickname| %>
-              <img src="<%=nickname.second%>" class='img-circle' style='height:30px; width:30px;'><b style="font-size:17px;"><%=nickname.first%></b><a href="/home/unblock_user/<%=id%>" target="_blank"><span class="glyphicon glyphicon-remove" style="float:right;" aria-hidden="true"></span></a>
+              <img src="<%=nickname.second%>" class='img-circle' style='height:30px; width:30px;'><b style="font-size:17px;"><%=nickname.first%></b><a href="/home/unblock_user/<%=id%>" target="popup" onclick="window.open('/home/unblock_user/<%=id%>','name','width=600,height=400')"><span class="glyphicon glyphicon-remove" style="float:right;" aria-hidden="true"></span></a>
               <br>
             <% end %>
           <% end %>
           
           <% unless @block_guest.nil? %>
             <% @block_guest.each do |id, ip_address| %>
-              <img src='/assets/hand.jpg' class='img-circle' style='height:30px; width:30px;'><span style="font-size:17px;">손님(<%=ip_address%>)</span><a href="/home/unblock_guest/<%=id%>" target="_blank"><span class="glyphicon glyphicon-remove" style="float:right;" aria-hidden="true"></span></a>
+              <img src='/assets/hand.jpg' class='img-circle' style='height:30px; width:30px;'><span style="font-size:17px;">손님(<%=ip_address%>)</span><a href="/home/unblock_guest/<%=id%>" target="popup" onclick="window.open('/home/unblock_guest/<%=id%>','name','width=600,height=400')"><span class="glyphicon glyphicon-remove" style="float:right;" aria-hidden="true"></span></a>
               <br>
             <% end %>
           <% end %>
           <br>
         </div>
         <div class="modal-footer">
-          <a href="/home/chat_destroying/<%=@channel.id%>" class="btn btn-sm btn-default">챗방 폭파</a>
-          <button class="btn btn-sm btn-default" style="margin-left:0px;" data-dismiss="modal">취소</button>
-          <button class="btn btn-sm btn-primary" style="margin-left:0px;">챗 수정하기</button>
+          <button class="btn btn-sm btn-default" style="margin-left:0px;" data-dismiss="modal">완료</button>
         </div>
       </div>
     </div><!-- /.modal-content -->
@@ -266,7 +272,7 @@ body {
               <option value="star">star</option>
               <option value="user">user</option>
             </select>
-          <br>
+          <br><br>
           <label for="inputImage">이미지(선택사항)</label>
           <input type="file" id="inputImage" class="form-control" placeholder="챗 이미지" name="image">
           <br>
@@ -387,14 +393,20 @@ $(function() {
     $("abbr.timeago").timeago(); // ago 형태로 바꿔준다.
 
       <% unless @block_user.nil? %>
-        <% @block_user.each do |bu| %>
-          $('.user_<%=bu%>').detach(); // 차단된 유져 모두 detach
+        <% @block_user.each do |id, nickname| %>
+          $('.user_<%=id%>').detach(); // 차단한 유져 모두 detach
         <% end %>
       <% end %>
       
       <% unless @block_guest.nil? %>
-        <% @block_guest.each do |bg| %>
-          $('.guest_<%=bg%>').detach(); // 차단된 게스트 모두 detach
+        <% @block_guest.each do |id, ip_address| %>
+          $('.guest_<%=id%>').detach(); // 차단한 게스트 모두 detach
+        <% end %>
+      <% end %>
+      
+      <% unless @block_me.nil? %>
+        <% @block_me.each do |bg| %>
+          $('.user_<%=bg%>').detach(); // 날 차단한 유져 모두 detach
         <% end %>
       <% end %>
   }); //데이터 붙이기 끝
@@ -413,12 +425,29 @@ $(function() {
                 }, 10000);
   
   user.bind('chat', function(data) {  // 유져에서 오는 접속중 데이터를 붙이자
-    $("#users").append('<div class="detach_user">' + data.user_nickname + data.guest_nickname + '<span style="font-size:12px; float:right;"><abbr class="timeago" title="'+data.time+'">'
-                      + data.time +  '</abbr> 업데이트됨</span></div>')
+    $("#users").append('<div class="detach_user row">' + data.user_nickname + data.guest_nickname + '<div class="col-xs-3" style="font-size:12px; float:right; text-align:right;"><abbr class="timeago" title="'+data.time+'">'
+                      + data.time +  '</abbr> 업데이트됨</div></div>')
     {$('.detach_user').first().detach();} // 기존 유져를 떼자
     $("abbr.timeago").timeago(); // ago 형태로 바꿔준다.
     $("#count").append('<div class="detach_count">' + data.count + '</div>')
     {$('.detach_count').first().detach();} // 기존 유져 카운트를 떼자
+    <% unless @block_user.nil? %>
+      <% @block_user.each do |id, nickname| %>
+        $('.user_<%=id%>').detach(); // 차단한 유져 모두 detach
+      <% end %>
+    <% end %>
+    
+    <% unless @block_guest.nil? %>
+      <% @block_guest.each do |id, ip_address| %>
+        $('.guest_<%=id%>').detach(); // 차단한 게스트 모두 detach
+      <% end %>
+    <% end %>
+    
+    <% unless @block_me.nil? %>
+      <% @block_me.each do |bg| %>
+        $('.user_<%=bg%>').detach(); // 날 차단한 유져 모두 detach
+      <% end %>
+    <% end %>
   });
   
   $(window).on('scroll', function(){ //타임라인
@@ -433,14 +462,20 @@ $(function() {
   $("#timeline").perfectScrollbar(); //타임라인 스크롤바
 
   <% unless @block_user.nil? %>
-    <% @block_user.keys.each do |bu| %>
-      $('.user_<%=bu%>').detach(); // 차단된 유져 모두 detach
+    <% @block_user.each do |id, nickname| %>
+      $('.user_<%=id%>').detach(); // 차단한 유져 모두 detach
     <% end %>
   <% end %>
   
   <% unless @block_guest.nil? %>
-    <% @block_guest.keys.each do |bg| %>
-      $('.guest_<%=bg%>').detach(); // 차단된 게스트 모두 detach
+    <% @block_guest.each do |id, ip_address| %>
+      $('.guest_<%=id%>').detach(); // 차단한 게스트 모두 detach
+    <% end %>
+  <% end %>
+
+  <% unless @block_me.nil? %>
+    <% @block_me.each do |bg| %>
+      $('.user_<%=bg%>').detach(); // 날 차단한 유져 모두 detach
     <% end %>
   <% end %>
   

@@ -88,7 +88,23 @@ class HomeController < ApplicationController
         @block_guest[block_guest_id] = block_guest_ip_address
           end
         end
+
+        @block_me = Array.new
+        if UserBlock.where(:block_user_id => current_user.id).take.nil?
+        else
+          for g in 0..UserBlock.where(:block_user_id => current_user.id).count.to_i-1
+        @block_me << UserBlock.where(:block_user_id => current_user.id).at(g).user.id
+          end
+        end
         
+      else
+        @block_me = Array.new
+        if UserBlock.where(:block_guest_id => @guest.id).take.nil?
+        else
+          for g in 0..UserBlock.where(:block_guest_id => @guest.id).count.to_i-1
+        @block_me << UserBlock.where(:block_guest_id => @guest.id).at(g).user.id
+          end
+        end
       end
       
   end
@@ -114,7 +130,7 @@ class HomeController < ApplicationController
       else
         for g in 0..ChannelJoiner.where(:channel_id => params[:id], :user_id => nil).count.to_i-1
         guest_jointime = ChannelJoiner.where(:channel_id => params[:id], :user_id => nil).at(g).created_at.in_time_zone("Seoul").iso8601 
-        guest_joiner << "<img src='/assets/hand.jpg' class='img-circle' style='height:30px; width:30px;'>손님(" + ChannelJoiner.where(:channel_id => params[:id], :user_id => nil).at(g).guest.ip_address.reverse[0..2] + ")<span style='font-size:10px;'>(<abbr class='timeago' title='" + guest_jointime + "'>" + guest_jointime + "</abbr>)</span>"
+        guest_joiner << "<div class='guest_" + ChannelJoiner.where(:channel_id => params[:id], :user_id => nil).at(g).guest.id.to_s + " col-xs-2' style='padding:0px 0px 0px 0px;'><img src='/assets/hand.jpg' class='img-circle' style='height:30px; width:30px;'>  (" + ChannelJoiner.where(:channel_id => params[:id], :user_id => nil).at(g).guest.ip_address.reverse[0..2] + ")  <span style='font-size:10px;'>(<abbr class='timeago' title='" + guest_jointime + "'>" + guest_jointime + "</abbr>)</span></div>"
         guest_nickname = guest_joiner.join(' ')
         end
       end
@@ -130,7 +146,7 @@ class HomeController < ApplicationController
               user_image = ChannelJoiner.where(:channel_id => params[:id], :guest_id=> nil).at(g).user.image.thumb.url
            end
         user_jointime = ChannelJoiner.where(:channel_id => params[:id], :guest_id => nil).at(g).created_at.in_time_zone("Seoul").iso8601 
-        user_joiner << "<img src='" + user_image + "' class='img-circle' style='height:30px; width:30px;'><b>" + ChannelJoiner.where(:channel_id => params[:id], :guest_id => nil).at(g).user.nickname + "</b><span style='font-size:10px;'>(<abbr class='timeago' title='" + user_jointime + "'>" + user_jointime + "</abbr>)</span>"
+        user_joiner << "<div class='user_" + ChannelJoiner.where(:channel_id => params[:id], :guest_id => nil).at(g).user.id.to_s + " col-xs-2' style='padding:0px 0px 0px 0px;'><img src='" + user_image + "' class='img-circle' style='height:30px; width:30px;'><b>  " + ChannelJoiner.where(:channel_id => params[:id], :guest_id => nil).at(g).user.nickname + "</b>  <span style='font-size:10px;'>(<abbr class='timeago' title='" + user_jointime + "'>" + user_jointime + "</abbr>)</span></div>"
         user_nickname = user_joiner.join(' ')
         end
       end
