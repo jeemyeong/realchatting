@@ -7,6 +7,7 @@ class CreateTimelines < ActiveRecord::Migration
       t.string :title
       t.string :text
       t.string :button
+      t.string :button_color
       t.string :image
       
       t.timestamps null: false

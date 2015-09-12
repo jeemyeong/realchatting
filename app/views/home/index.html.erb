@@ -128,7 +128,7 @@
     </div>
 
     
-    <div class="modal fade" >
+    <div class="modal fade" id="chat_maker" >
       <div class="modal-dialog">
         <div class="modal-content">
           <%= form_tag "/home/chat_making", method: "post", enctype: "multipart/form-data", class: "form-signin" do %>
@@ -304,7 +304,7 @@
     });
     var channel = websocket.subscribe("chat_<%=@banner.id%>");  //웹소켓에서 banner.id로 데이터를 받자
     channel.bind('chat', function(data) {  // 채널에서 오는 데이터를 붙이자.
-             $("#logs").append('<div class="detach row' + data.user_id + " " + data.guest_id + '"><div class="col-lg-12 col-md-12" style="margin-bottom:5px;">\
+             $("#logs").append('<div class="detach row ' + data.user_id + " " + data.guest_id + '"><div class="col-lg-12 col-md-12" style="margin-bottom:5px;">\
                                 <div class="col-lg-2 col-md-2" style="font-size:12px;">' + data.nickname + '</div>\
                                 <div class="shuffle msg col-lg-6 col-md-6">' + data.msg + '</div>\
                                 <div class="col-lg-4 col-md-4" style="text-align:right; font-size:5px;"><abbr class="timeago" title="' + data.time + '">' + data.time + '</abbr></div></div></div>');
@@ -338,7 +338,7 @@
     <% @channels.each do |c| %> 
     var channel_<%=c.id%> = websocket.subscribe("chat_<%=c.id%>");  //웹소켓에서 채널들이 channel_c.id로 모두 데이터를 받자
     channel_<%=c.id%>.bind('chat', function(data) {  // 채널에서 오는 데이터를 붙이자.
-                        $("#log_<%=c.id%>").append('<div class="detach_<%=c.id%> row' + data.user_id + " " + data.guest_id + '" style="padding-top:3px;"><div class="col-lg-12 col-md-12" style="margin-bottom:5px;">\
+                        $("#log_<%=c.id%>").append('<div class="detach_<%=c.id%> row ' + data.user_id + " " + data.guest_id + '" style="padding-top:3px;"><div class="col-lg-12 col-md-12" style="margin-bottom:5px;">\
                                                     <div class="col-lg-3 col-md-3" style="font-size:12px; padding: 0px 0px 0px 0px;">' + data.nickname + '</div>\
                                                     <div class="shuffle_<%=c.id%> msg col-lg-7 col-md-7" style="padding-right:0px;">' + data.msg + '</div>\
                                                     <div class="col-lg-2 col-md-2" style="padding: 0px 0px 0px 0px; text-align:right; font-size:5px;"><abbr class="timeago" title="' + data.time + '">' + data.time + '</abbr></div></div></div>');
@@ -375,7 +375,7 @@
     <% end %> //채널들 끝
     
     $("#chat_make").click(function(){ //챗방 만들기 modal형태
-               $('.modal').modal();
+               $('#chat_maker').modal();
   
     })
   

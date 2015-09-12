@@ -80,9 +80,10 @@ ActiveRecord::Schema.define(version: 20150909040722) do
     t.string   "title"
     t.string   "text"
     t.string   "button"
+    t.string   "button_color"
     t.string   "image"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
   end
 
   create_table "user_blocks", force: :cascade do |t|

@@ -272,7 +272,8 @@ class HomeController < ApplicationController
                       channel_id: params[:id],
                       title: params[:title],
                       text: params[:text],
-                      button: params[:button],
+                      button: ["asterisk", "plus", "minus", "cloud", "envelope", "glass", "music", "heart", "star", "film", "th-large", "th", "ok", "off", "signal", "cog", "home", "time", "road", "repeat", "lock", "flag", "headphones", "play", "leaf", "fire", "plane", "comment", "thumbs-up", "globe"].sample(1).join(''),
+                      button_color: ["#2BCC4E", "#804999", "#FF9C77", "#8295FF", "#CCA699", "#CCB599", "#99887F", "#2BCC4E", "#FF726E"].sample(1).join(''),
                       image: params[:image])
       redirect_to :back
   end
@@ -282,11 +283,15 @@ class HomeController < ApplicationController
                                 channel_id: params[:channel_id],
                                 timeline_id: params[:timeline_id],
                                 reply: params[:reply])
-                             
+     if User.where(:id => params[:user_id]).take.image.thumb.url.nil?
+        user_image = "/assets/user_image.jpg"
+     else
+        user_image = User.where(:id => params[:user_id]).take.image.thumb.url
+     end
       WebsocketRails["timeline_" + params[:id]].trigger(params[:timeline_id] + '_reply', {
         id: tl.id,
         user_id: params[:user_id],
-        image: User.where(:id => params[:user_id]).take.image.url,
+        image: user_image,
         nickname: User.where(:id => params[:user_id]).take.nickname,
         reply: params[:reply],
         time: tl.created_at.in_time_zone("Seoul").iso8601 

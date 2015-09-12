@@ -134,7 +134,7 @@ body {
       	<% @channel.timelines.reverse.each do |t| %>
       	<div class="cd-timeline-block user_<%=t.user.id%>">
           <a href="#<%=t.id%>_timeline" data-toggle="collapse">
-      		<div class="cd-timeline-img" style="background:#<%=["75ce66","c03b44","f0ca45"].sample(1).join('')%>">
+      		<div class="cd-timeline-img" style="background:<%=t.button_color%>">
       			<span class="glyphicon glyphicon-<%=t.button%> glyphicon-center" aria-hidden="true"></span>
       		</div> <!-- cd-timeline-img -->
       		</a>
@@ -142,7 +142,7 @@ body {
       			<h2><img src="<%=t.user.image.thumb.url ? t.user.image.thumb : "/assets/user_image.jpg"%>" class="img-circle" style="height:25px; width:25px;"><%=t.user.nickname%> : <%=t.title%>
               <% unless current_user.nil? %>
                 <% if current_user.id == t.user_id %>
-                  <a href=# id="timeline_editor_<%=t.id%>" style="float:right;" data-toggle="collapse"><span class="glyphicon glyphicon-scissors" aria-hidden="true"></span></a>
+                  <a href=# id="timeline_editor_<%=t.id%>" style="float:right;" data-toggle="collapse"><span class="glyphicon glyphicon-scissors" aria-hidden="true" style="font-size:13px;"></span></a>
                 <% end %>
               <% end %>
             </h2>
@@ -152,7 +152,7 @@ body {
           			<img src="<%=t.image.url%>" style="width:100%; margin-top:20px;" class="img-rounded">
         			<% end %>
         			<p><%=t.text%></p>
-              <a href="#<%=t.id%>_repl" style="float:right;" data-toggle="collapse"><span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span></a>
+              <a href="#<%=t.id%>_repl" style="float:right;" data-toggle="collapse"><span class="glyphicon glyphicon-collapse-down" aria-hidden="true" style="font-size:13px;">댓글달기</span></a>
         			<span class="cd-date"><abbr class="timeago" style="font-size:12px;" title="<%=t.created_at.in_time_zone("Seoul").iso8601 %>"><%=t.created_at.in_time_zone("Seoul").iso8601%></abbr></span>
               <div class="collapse" style="border-top: 1px solid #e5e5e5; margin-top:50px;" id="<%=t.id%>_repl">
                 <ul id="<%=t.id%>_replies" style="padding-left: 0px;">
@@ -253,24 +253,6 @@ body {
           <label for="inputText">내용</label>
           <textarea id="inputText" class="form-control" name="text" placeholder="내용" rows="4" required autofocus></textarea>
           <br>
-          <label for="selectBox">버튼</label>
-            <select id="selectBox" name="button">
-              <option value="asterisk">asterisk</option>
-              <option value="plus">plus</option>
-              <option value="euro">euro</option>
-              <option value="eur">eur</option>
-              <option value="minus">minus</option>
-              <option value="cloud">cloud</option>
-              <option value="envelope">envelope</option>
-              <option value="pencil">pencil</option>
-              <option value="glass">glass</option>
-              <option value="music">music</option>
-              <option value="search">search</option>
-              <option value="heart">heart</option>
-              <option value="star">star</option>
-              <option value="user">user</option>
-            </select>
-          <br><br>
           <label for="inputImage">이미지(선택사항)</label>
           <input type="file" id="inputImage" class="form-control" placeholder="챗 이미지" name="image">
           <br>
