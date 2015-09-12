@@ -1,5 +1,5 @@
 class AdminController < ApplicationController
-    before_action :authenticate_admin!, only: [:channels, :channel_edit, :channel_editing, :channel_destroy]
+    before_action :authenticate_admin!
   def channels
     @channels = Channel.all
   end

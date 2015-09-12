@@ -27,6 +27,59 @@ class HomeController < ApplicationController
       unless ChannelJoiner.where.not(updated_at: (Time.now - 30)..Time.now).take.nil?  #30초가 넘게 업데이트가 안된 db는
              ChannelJoiner.where.not(updated_at: (Time.now - 30)..Time.now).delete_all #다 지우자
       end
+      
+      if user_signed_in?
+      else #로그인이 되어 있지 않으면
+        if Guest.where(:ip_address => request.remote_ip).take.nil?   # 중복되지 않게 채크해보고
+           @guest = Guest.create(ip_address: request.remote_ip)      #처음보는 ip라면 db에 저장하고 가져오고
+        else
+           @guest = Guest.where(:ip_address => request.remote_ip).take #봤던 ip라면 그냥 가져오고
+        end
+      end
+      
+      if user_signed_in?
+        @block_user = Hash.new
+        if UserBlock.where(:user_id => current_user.id, :block_guest_id => nil).take.nil?
+        else
+          for g in 0..UserBlock.where(:user_id => current_user.id, :block_guest_id => nil).count.to_i-1
+        block_user_id = UserBlock.where(:user_id => current_user.id, :block_guest_id => nil).at(g).block_user_id
+           if User.where(:id => block_user_id).take.image.thumb.url.nil?
+              block_user_image = "/assets/user_image.jpg"
+           else
+              block_user_image = User.where(:id => params[:user_id]).take.image.thumb.url
+           end
+        block_user_nickname = User.where(:id => block_user_id).take.nickname
+        @block_user[block_user_id] = [block_user_nickname, block_user_image]
+          end
+        end
+        
+        @block_guest = Hash.new
+        if UserBlock.where(:user_id => current_user.id, :block_user_id => nil).take.nil?
+        else
+          for g in 0..UserBlock.where(:user_id => current_user.id, :block_user_id => nil).count.to_i-1
+        block_guest_id = UserBlock.where(:user_id => current_user.id, :block_user_id => nil).at(g).block_guest_id
+        block_guest_ip_address = Guest.where(:id => block_guest_id).take.ip_address.reverse[0..2]
+        @block_guest[block_guest_id] = block_guest_ip_address
+          end
+        end
+
+        @block_me = Array.new
+        if UserBlock.where(:block_user_id => current_user.id).take.nil?
+        else
+          for g in 0..UserBlock.where(:block_user_id => current_user.id).count.to_i-1
+        @block_me << UserBlock.where(:block_user_id => current_user.id).at(g).user.id
+          end
+        end
+        
+      else
+        @block_me = Array.new
+        if UserBlock.where(:block_guest_id => @guest.id).take.nil?
+        else
+          for g in 0..UserBlock.where(:block_guest_id => @guest.id).count.to_i-1
+        @block_me << UserBlock.where(:block_guest_id => @guest.id).at(g).user.id
+          end
+        end
+      end
   end
   
   def chat
@@ -319,12 +372,6 @@ class HomeController < ApplicationController
       end
         render text: "<link rel='stylesheet' href='https://bootswatch.com/flatly/bootstrap.min.css'>
                       <div class='container'><h1><center>챗이 삭제되었습니다.</h1><br><center><button class='btn btn-lg btn-default' onclick='self.close()'>창닫기"
-  end
-  
-  def type_edit
-    edit = Channel.find(params[:id])
-    edit.mediatype = params[:mediatype]
-    edit.save
   end
   
   def block_user

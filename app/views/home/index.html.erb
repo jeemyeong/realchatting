@@ -43,6 +43,11 @@
             <!--실챗 방송중 채팅방 -->
           <div class="row " style="padding-top:60px; padding-bottom:150px;" >
             <div class="col-xs-12">
+            <!--차단관리-->
+            <% unless current_user.nil? %>
+                <a class="badge" id="block_edit" style="font-size:16px; color:white; float:right;"><b>차단 유져</b></a>
+            <% end %>
+            <!--차단관리 끝-->
               <h1><b>실시간 방송중 채팅방</b></h1>
               <br>
             </div>
@@ -147,11 +152,141 @@
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
     
+    <div class="modal fade" id="block_editor" >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="form-signin">
+            <div class="modal-header">
+              <h2 class="modal-title form-signin-heading"><b>차단 유져</b></h2>
+            </div>
+            <div class="modal-body" id="block_list">
+              <% unless @block_user.nil? %>
+                <% @block_user.each do |id, nickname| %>
+                  <div id="detach_block_user_<%=id%>"><img src="<%=nickname.second%>" class='img-circle' style='height:30px; width:30px;'><b style="font-size:17px;"><%=nickname.first%></b><a href="/home/unblock_user/<%=id%>" target="popup" onclick="window.open('/home/unblock_user/<%=id%>','name','width=600,height=400')"><span class="glyphicon glyphicon-remove" style="float:right;" aria-hidden="true"></span></a></div>
+                <% end %>
+              <% end %>
+              
+              <% unless @block_guest.nil? %>
+                <% @block_guest.each do |id, ip_address| %>
+                  <div id="detach_block_guest_<%=id%>"><img src='/assets/hand.jpg' class='img-circle' style='height:30px; width:30px;'><span style="font-size:17px;">손님(<%=ip_address%>)</span><a href="/home/unblock_guest/<%=id%>" target="popup" onclick="window.open('/home/unblock_guest/<%=id%>','name','width=600,height=400')"><span class="glyphicon glyphicon-remove" style="float:right;" aria-hidden="true"></span></a></div>
+                <% end %>
+              <% end %>
+              <br>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-sm btn-default" style="margin-left:0px;" data-dismiss="modal">완료</button>
+            </div>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    
 <script>
   $(function() {
     $("abbr.timeago").timeago(); //ago형태로 바꿔준다.
     var url      = window.location.host + '/websocket';
     var websocket = new WebSocketRails(url);
+      var block = websocket.subscribe("block");  
+  var block_user = [];
+  var block_guest = [];
+  
+  block.bind('block', function(data) {  // 블락 데이터를 모으자
+    if ( data.block_user_id != 'undefined' ){ //게스트에 대한 데이터라면
+      <% if user_signed_in? %> //로그인한 경우
+        if(data.user_id == <%=current_user.id%>){ //블락한 유져가 나라면
+          block_guest.push(data.block_guest_id) //블락게스트에 블락게스트를 추가하자
+          $("#block_list").append('<img src="/assets/hand.jpg" class="img-circle" style="height:30px; width:30px;"><span style="font-size:17px;">손님(' + data.block_guest_ip_address + ')</span><a href="/home/unblock_guest/' + data.block_guest_id + '" target="popup" onclick="window.open(' + "'/home/unblock_guest/" + data.block_guest_id + "','name','width=600,height=400')" + '"><span class="glyphicon glyphicon-remove" style="float:right;" aria-hidden="true"></span></a>')
+        }
+      <% else %> //내가 게스트인 경우
+        if(data.block_guest_id == <%=@guest.id%>){ //블락게스트가 나라면
+          block_user.push(data.user_id) //블락유져에 블락한유져를 추가하자
+        }
+      <% end %>
+
+    }
+    else { //유져에 대한 데이터라면
+      <% if user_signed_in? %> //로그인한 경우
+        if(data.user_id == <%=current_user.id%>){ //블락한 유져가 나라면
+          block_user.push(data.block_user_id) //블락유져에 블락유져를 추가하자
+          $("#block_list").append('<img src="' + data.block_user_image + '" class="img-circle" style="height:30px; width:30px;"><b style="font-size:17px;">' + data.block_user_nickname + '</b><a href="/home/unblock_user/' + data.block_user_id + '" target="popup" onclick="window.open(' + "'/home/unblock_user/" + data.block_user_id + "','name','width=600,height=400')" + '"><span class="glyphicon glyphicon-remove" style="float:right;" aria-hidden="true"></span></a>')
+        }
+        else if (data.block_user_id == <%=current_user.id%>){ //블락유져가 나라면
+          block_user.push(data.user_id) //블락유져에 블락한유져를 추가하자
+        }
+      <% end %>
+    };
+    $.each( block_user, function( index, value ){
+    $('.user_' + value).detach();
+    });
+    
+    $.each( block_guest, function( index, value ){
+    $('.guest_' + value).detach();
+    });
+  });
+  
+  block.bind('unblock', function(data) {  // 언블락 데이터를 모으자
+  if ( data.block_user_id != 'undefined' ){ //게스트에 대한 데이터라면
+    <% if user_signed_in? %> //로그인한 경우
+      if(data.user_id == <%=current_user.id%>){ //블락한 유져가 나라면
+        $.grep( block_guest, function( n, i ) {
+          return n !== data.block_guest_id;
+          });
+      };
+    <% else %> //내가 게스트인 경우
+      if(data.block_guest_id == <%=@guest.id%>){ //블락게스트가 나라면
+        $.grep( block_user, function( n, i ) {
+          return n !== data.user_id;
+        });
+      }
+    <% end %>
+  }
+  else { //유져에 대한 데이터라면
+    <% if user_signed_in? %> //로그인한 경우
+      if(data.user_id == <%=current_user.id%>){ //블락한 유져가 나라면
+        $.grep( block_user, function( n, i ) {
+          return n !== data.block_user_id;
+        });
+      }
+      else if (data.block_user_id == <%=current_user.id%>){ //블락유져가 나라면
+        $.grep( block_user, function( n, i ) {
+          return n !== data.user_id;
+        });
+      };
+    <% end %>
+  };
+    $('#detach_block_user_' + data.block_user_id).detach();
+    $('#detach_block_guest_' + data.block_guest_id).detach();
+  });
+    
+    <% unless @block_user.nil? %>
+      <% @block_user.each do |id, nickname| %>
+        block_user.push('<%=id%>')
+      <% end %>
+    <% end %>
+    
+    <% unless @block_guest.nil? %>
+      <% @block_guest.each do |id, ip_address| %>
+        block_guest.push('<%=id%>')
+      <% end %>
+    <% end %>
+  
+    <% unless @block_me.nil? %>
+      <% @block_me.each do |bg| %>
+        block_user.push('<%=bg%>')
+      <% end %>
+    <% end %>
+  
+    $.each( block_user, function( index, value ){
+    $('.user_' + value).detach();
+    });
+    
+    $.each( block_guest, function( index, value ){
+    $('.guest_' + value).detach();
+    });
+    
+    $("#block_edit").click(function(){ //차단 유져
+           $('#block_editor').modal();
+    })
     
     $("#popular").Morphext({ //인기 채팅방 텍스트 스타일
         animation: "flash",
@@ -169,7 +304,7 @@
     });
     var channel = websocket.subscribe("chat_<%=@banner.id%>");  //웹소켓에서 banner.id로 데이터를 받자
     channel.bind('chat', function(data) {  // 채널에서 오는 데이터를 붙이자.
-             $("#logs").append('<div class="detach row"><div class="col-lg-12 col-md-12" style="margin-bottom:5px;">\
+             $("#logs").append('<div class="detach row' + data.user_id + " " + data.guest_id + '"><div class="col-lg-12 col-md-12" style="margin-bottom:5px;">\
                                 <div class="col-lg-2 col-md-2" style="font-size:12px;">' + data.nickname + '</div>\
                                 <div class="shuffle msg col-lg-6 col-md-6">' + data.msg + '</div>\
                                 <div class="col-lg-4 col-md-4" style="text-align:right; font-size:5px;"><abbr class="timeago" title="' + data.time + '">' + data.time + '</abbr></div></div></div>');
@@ -177,6 +312,13 @@
                         $('.detach').first().detach(); // 맨윗채팅을 떼자
                         $('.shuffle').last().shuffleLetters(); // 입력한 채팅이 셔플한다
                         $("abbr.timeago").timeago(); // ago 형태로 바꿔준다.
+                          $.each( block_user, function( index, value ){
+                          $('.user_' + value).detach();
+                          });
+                          
+                          $.each( block_guest, function( index, value ){
+                          $('.guest_' + value).detach();
+                          });
                         }); //배너 채팅 붙이기 끝
     $('.shuffle').shuffleLetters(); //사이트에 들어오면 배너 채팅화면이 셔플한다.
     setInterval(function () { // 배너의 채팅화면이 5초마다 셔플한다.
@@ -196,7 +338,7 @@
     <% @channels.each do |c| %> 
     var channel_<%=c.id%> = websocket.subscribe("chat_<%=c.id%>");  //웹소켓에서 채널들이 channel_c.id로 모두 데이터를 받자
     channel_<%=c.id%>.bind('chat', function(data) {  // 채널에서 오는 데이터를 붙이자.
-                        $("#log_<%=c.id%>").append('<div class="detach_<%=c.id%> row" style="padding-top:3px;"><div class="col-lg-12 col-md-12" style="margin-bottom:5px;">\
+                        $("#log_<%=c.id%>").append('<div class="detach_<%=c.id%> row' + data.user_id + " " + data.guest_id + '" style="padding-top:3px;"><div class="col-lg-12 col-md-12" style="margin-bottom:5px;">\
                                                     <div class="col-lg-3 col-md-3" style="font-size:12px; padding: 0px 0px 0px 0px;">' + data.nickname + '</div>\
                                                     <div class="shuffle_<%=c.id%> msg col-lg-7 col-md-7" style="padding-right:0px;">' + data.msg + '</div>\
                                                     <div class="col-lg-2 col-md-2" style="padding: 0px 0px 0px 0px; text-align:right; font-size:5px;"><abbr class="timeago" title="' + data.time + '">' + data.time + '</abbr></div></div></div>');
@@ -204,6 +346,13 @@
                         $('.detach_<%=c.id%>').first().detach(); // 맨윗채팅을 떼자
                         $('.shuffle_<%=c.id%>').last().shuffleLetters(); // 입력한 채팅이 셔플한다
                         $("abbr.timeago").timeago(); // ago 형태로 바꿔준다.
+                        $.each( block_user, function( index, value ){
+                        $('.user_' + value).detach();
+                        });
+                        
+                        $.each( block_guest, function( index, value ){
+                        $('.guest_' + value).detach();
+                        });
                         }); //데이터 채팅 붙이기 끝
     $('.shuffle_<%=c.id%>').shuffleLetters(); //사이트에 들어오면 채널 텍스트가 셔플한다.
     setInterval(function () {

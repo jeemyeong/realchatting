@@ -1,14 +1,20 @@
-
+<style type="text/css">
+td, th {
+   padding-right:10px; padding-left:10px;
+}
+</style>
 <h1>ChatLogs</h1>
 <br><br>
-<%=@chatlogs.inspect%>
 <table>
   <thead>
     <tr>
       <th style="border:3px solid #ecf0f1;">id (in DB)  </th>
       <th style="border:3px solid #ecf0f1;">user_id  </th>
+      <th style="border:3px solid #ecf0f1;">user.nickname  </th>
       <th style="border:3px solid #ecf0f1;">channel_id  </th>
+      <th style="border:3px solid #ecf0f1;">channel.title  </th>
       <th style="border:3px solid #ecf0f1;">guest_id  </th>
+      <th style="border:3px solid #ecf0f1;">guest.ip_address  </th>
       <th style="border:3px solid #ecf0f1;">msg  </th>
       <th style="border:3px solid #ecf0f1;">created at  </th>
       <th style="border:3px solid #ecf0f1;">updated at  </th>
@@ -21,8 +27,11 @@
       <tr>
         <td style="border:3px solid #ecf0f1;"><%= c.id %>  </td>
         <td style="border:3px solid #ecf0f1;"><%= c.user_id %>  </td>
+        <td style="border:3px solid #ecf0f1;"><% unless c.user_id.nil? %><%= c.user.nickname %><% end %></td>
         <td style="border:3px solid #ecf0f1;"><%= c.channel_id %>  </td>
+        <td style="border:3px solid #ecf0f1;"><%= c.channel.title %>  </td>
         <td style="border:3px solid #ecf0f1;"><%= c.guest_id %>  </td>
+        <td style="border:3px solid #ecf0f1;"><% unless c.guest_id.nil? %><%= c.guest.ip_address %><% end %></td>
         <td style="border:3px solid #ecf0f1;"><%= c.msg %>  </td>
         <td style="border:3px solid #ecf0f1;"><%= c.created_at.in_time_zone("Seoul") %>  </td>
         <td style="border:3px solid #ecf0f1;"><%= c.updated_at.in_time_zone("Seoul") %>  </td>
@@ -30,6 +39,5 @@
     <% end %>
   </tbody>
 </table>
-
 <br>
 

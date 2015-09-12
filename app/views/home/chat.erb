@@ -444,6 +444,9 @@ $(function() {
     $("#<%=t.id%>_replies").append('<p style="font-size:15px;" class="user_' + data.user_id + '"><img src="' + data.image + '" class="img-circle" style="height:18px; width:18px;">' + data.nickname + ' : <span class="<%=t.id%>_reply">' + data.reply + '</span><a href="/home/timeline_reply_destroying/' + data.id + '" style="float:right;margin-left:10px;"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a><abbr class="timeago" style="font-size:12px; float:right;" title="' + data.time + '">' + data.time + '</abbr></p>');
     $('.<%=t.id%>_reply').last().shuffleLetters();
     $("abbr.timeago").timeago(); // ago 형태로 바꿔준다.
+    $.each( block_user, function( index, value ){
+    $('.user_' + value).detach();
+    });
   }); //데이터 붙이기 끝
   
       $("#timeline_editor_<%=t.id%>").click(function(){ //타임라인 에디터을 눌렀을때 팝업으로 뜨자
@@ -455,7 +458,7 @@ $(function() {
     $("#logs").append('<div class="detach_chat row ' + data.user_id + " " + data.guest_id + '" style="padding-bottom:10px;"><span <% if user_signed_in? %> class="dropdown-toggle" type="button" id="dropdownMenu_'+data.id+'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" <% end %> >   ' + data.nickname + 
                       '  </span><span class="shuffle msg"> ' + data.msg + ' </span><abbr class="timeago" style="font-size:5px; float:right;" title="'+data.time+'">'
                       + data.time +  '</abbr>'+ data.ul +'<br></div>');
-    if(data.count>=50){  // 채팅이 50개 이상이라면
+    if(data.count>=200){  // 채팅이 200개 이상이라면
     $('.detach_chat').first().detach();} // 맨윗채팅을 떼자
     $('.shuffle').last().shuffleLetters();
     $("#btn-input").focus(); // 채팅입력화면으로 가자
