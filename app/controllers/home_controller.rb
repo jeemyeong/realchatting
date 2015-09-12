@@ -232,6 +232,7 @@ class HomeController < ApplicationController
                              
       WebsocketRails["timeline_" + params[:id]].trigger(params[:timeline_id] + '_reply', {
         id: tl.id,
+        user_id: params[:user_id],
         image: User.where(:id => params[:user_id]).take.image.url,
         nickname: User.where(:id => params[:user_id]).take.nickname,
         reply: params[:reply],
@@ -336,17 +337,36 @@ class HomeController < ApplicationController
   
   def blocking_user
     if UserBlock.where(:user_id => params[:user_id], :block_user_id => params[:id]).take.nil?
-           UserBlock.create(user_id: params[:user_id], block_user_id: params[:id])
+       UserBlock.create(user_id: params[:user_id], block_user_id: params[:id])
     end
         render text: "<link rel='stylesheet' href='https://bootswatch.com/flatly/bootstrap.min.css'>
                       <div class='container'><h1><center> 차단했습니다.</h1><br><center><button class='btn btn-lg btn-default' onclick='self.close()'>창닫기"
+        
+         if User.where(:id => params[:id]).take.image.thumb.url.nil?
+            user_image = "/assets/user_image.jpg"
+         else
+            user_image = User.where(:id => params[:id]).take.image.thumb.url
+         end
+        WebsocketRails["block"].trigger('block', {
+              user_id: params[:user_id],
+              block_user_id: params[:id],
+              block_user_image: user_image,
+              block_user_nickname: User.where(:id => params[:id]).take.nickname
+              
+          })
   end
   def blocking_guest
     if UserBlock.where(:user_id => params[:user_id], :block_guest_id => params[:id]).take.nil?
-           UserBlock.create(user_id: params[:user_id], block_guest_id: params[:id])
+       UserBlock.create(user_id: params[:user_id], block_guest_id: params[:id])
     end
         render text: "<link rel='stylesheet' href='https://bootswatch.com/flatly/bootstrap.min.css'>
                       <div class='container'><h1><center> 차단했습니다.</h1><br><center><button class='btn btn-lg btn-default' onclick='self.close()'>창닫기"
+                      
+        WebsocketRails["block"].trigger('block', {
+              user_id: params[:user_id],
+              block_guest_id: params[:id],
+              block_guest_ip_address: Guest.where(:id => params[:id]).take.ip_address.to_s.reverse[0..2]
+          })
   end
   
   def unblock_user
@@ -363,6 +383,11 @@ class HomeController < ApplicationController
     end
         render text: "<link rel='stylesheet' href='https://bootswatch.com/flatly/bootstrap.min.css'>
                       <div class='container'><h1><center> 차단해제되었습니다.</h1><br><center><button class='btn btn-lg btn-default' onclick='self.close()'>창닫기"
+                      
+        WebsocketRails["block"].trigger('unblock', {
+              user_id: params[:user_id],
+              block_user_id: params[:id]
+          })
   end
   
   def unblocking_guest
@@ -371,6 +396,11 @@ class HomeController < ApplicationController
     end
         render text: "<link rel='stylesheet' href='https://bootswatch.com/flatly/bootstrap.min.css'>
                       <div class='container'><h1><center> 차단해제되었습니다.</h1><br><center><button class='btn btn-lg btn-default' onclick='self.close()'>창닫기"
+                      
+        WebsocketRails["block"].trigger('unblock', {
+              user_id: params[:user_id],
+              block_guest_id: params[:id]
+          })
   end
   
 end

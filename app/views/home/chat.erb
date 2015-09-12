@@ -217,18 +217,16 @@ body {
         <div class="modal-header">
           <h2 class="modal-title form-signin-heading"><b>차단 유져</b></h2>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" id="block_list">
           <% unless @block_user.nil? %>
             <% @block_user.each do |id, nickname| %>
-              <img src="<%=nickname.second%>" class='img-circle' style='height:30px; width:30px;'><b style="font-size:17px;"><%=nickname.first%></b><a href="/home/unblock_user/<%=id%>" target="popup" onclick="window.open('/home/unblock_user/<%=id%>','name','width=600,height=400')"><span class="glyphicon glyphicon-remove" style="float:right;" aria-hidden="true"></span></a>
-              <br>
+              <div id="detach_block_user_<%=id%>"><img src="<%=nickname.second%>" class='img-circle' style='height:30px; width:30px;'><b style="font-size:17px;"><%=nickname.first%></b><a href="/home/unblock_user/<%=id%>" target="popup" onclick="window.open('/home/unblock_user/<%=id%>','name','width=600,height=400')"><span class="glyphicon glyphicon-remove" style="float:right;" aria-hidden="true"></span></a></div>
             <% end %>
           <% end %>
           
           <% unless @block_guest.nil? %>
             <% @block_guest.each do |id, ip_address| %>
-              <img src='/assets/hand.jpg' class='img-circle' style='height:30px; width:30px;'><span style="font-size:17px;">손님(<%=ip_address%>)</span><a href="/home/unblock_guest/<%=id%>" target="popup" onclick="window.open('/home/unblock_guest/<%=id%>','name','width=600,height=400')"><span class="glyphicon glyphicon-remove" style="float:right;" aria-hidden="true"></span></a>
-              <br>
+              <div id="detach_block_guest_<%=id%>"><img src='/assets/hand.jpg' class='img-circle' style='height:30px; width:30px;'><span style="font-size:17px;">손님(<%=ip_address%>)</span><a href="/home/unblock_guest/<%=id%>" target="popup" onclick="window.open('/home/unblock_guest/<%=id%>','name','width=600,height=400')"><span class="glyphicon glyphicon-remove" style="float:right;" aria-hidden="true"></span></a></div>
             <% end %>
           <% end %>
           <br>
@@ -294,6 +292,77 @@ $(function() {
   var channel = websocket.subscribe("chat_<%=@channel.id%>");  
   var user = websocket.subscribe("user_<%=@channel.id%>");  
   var timeline = websocket.subscribe("timeline_<%=@channel.id%>");  
+  var block = websocket.subscribe("block");  
+  var block_user = [];
+  var block_guest = [];
+  block.bind('block', function(data) {  // 블락 데이터를 모으자
+    if ( data.block_user_id != 'undefined' ){ //게스트에 대한 데이터라면
+      <% if user_signed_in? %> //로그인한 경우
+        if(data.user_id == <%=current_user.id%>){ //블락한 유져가 나라면
+          block_guest.push(data.block_guest_id) //블락게스트에 블락게스트를 추가하자
+          $("#block_list").append('<img src="/assets/hand.jpg" class="img-circle" style="height:30px; width:30px;"><span style="font-size:17px;">손님(' + data.block_guest_ip_address + ')</span><a href="/home/unblock_guest/' + data.block_guest_id + '" target="popup" onclick="window.open(' + "'/home/unblock_guest/" + data.block_guest_id + "','name','width=600,height=400')" + '"><span class="glyphicon glyphicon-remove" style="float:right;" aria-hidden="true"></span></a>')
+        }
+      <% else %> //내가 게스트인 경우
+        if(data.block_guest_id == <%=@guest.id%>){ //블락게스트가 나라면
+          block_user.push(data.user_id) //블락유져에 블락한유져를 추가하자
+        }
+      <% end %>
+
+    }
+    else { //유져에 대한 데이터라면
+      <% if user_signed_in? %> //로그인한 경우
+        if(data.user_id == <%=current_user.id%>){ //블락한 유져가 나라면
+          block_user.push(data.block_user_id) //블락유져에 블락유져를 추가하자
+          $("#block_list").append('<img src="' + data.block_user_image + '" class="img-circle" style="height:30px; width:30px;"><b style="font-size:17px;">' + data.block_user_nickname + '</b><a href="/home/unblock_user/' + data.block_user_id + '" target="popup" onclick="window.open(' + "'/home/unblock_user/" + data.block_user_id + "','name','width=600,height=400')" + '"><span class="glyphicon glyphicon-remove" style="float:right;" aria-hidden="true"></span></a>')
+        }
+        else if (data.block_user_id == <%=current_user.id%>){ //블락유져가 나라면
+          block_user.push(data.user_id) //블락유져에 블락한유져를 추가하자
+        }
+      <% end %>
+    };
+    $.each( block_user, function( index, value ){
+    $('.user_' + value).detach();
+    });
+    
+    $.each( block_guest, function( index, value ){
+    $('.guest_' + value).detach();
+    });
+  });
+  
+  block.bind('unblock', function(data) {  // 언블락 데이터를 모으자
+  if ( data.block_user_id != 'undefined' ){ //게스트에 대한 데이터라면
+    <% if user_signed_in? %> //로그인한 경우
+      if(data.user_id == <%=current_user.id%>){ //블락한 유져가 나라면
+        $.grep( block_guest, function( n, i ) {
+          return n !== data.block_guest_id;
+          });
+      };
+    <% else %> //내가 게스트인 경우
+      if(data.block_guest_id == <%=@guest.id%>){ //블락게스트가 나라면
+        $.grep( block_user, function( n, i ) {
+          return n !== data.user_id;
+        });
+      }
+    <% end %>
+  }
+  else { //유져에 대한 데이터라면
+    <% if user_signed_in? %> //로그인한 경우
+      if(data.user_id == <%=current_user.id%>){ //블락한 유져가 나라면
+        $.grep( block_user, function( n, i ) {
+          return n !== data.block_user_id;
+        });
+      }
+      else if (data.block_user_id == <%=current_user.id%>){ //블락유져가 나라면
+        $.grep( block_user, function( n, i ) {
+          return n !== data.user_id;
+        });
+      };
+    <% end %>
+  };
+    $('#detach_block_user_' + data.block_user_id).detach();
+    $('#detach_block_guest_' + data.block_guest_id).detach();
+  });
+
         $('.shuffle').shuffleLetters(); 
         setInterval(function () {
         $('.shuffle').shuffleLetters(); 
@@ -372,7 +441,7 @@ $(function() {
   <% end %>
   });
   timeline.bind('<%=t.id%>_reply', function(data) {  // 타임라인에서 오는 데이터를 붙이자
-    $("#<%=t.id%>_replies").append('<p style="font-size:15px;"><img src="' + data.image + '" class="img-circle" style="height:18px; width:18px;">' + data.nickname + ' : <span class="<%=t.id%>_reply">' + data.reply + '</span><a href="/home/timeline_reply_destroying/' + data.id + '" style="float:right;margin-left:10px;"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a><abbr class="timeago" style="font-size:12px; float:right;" title="' + data.time + '">' + data.time + '</abbr></p>');
+    $("#<%=t.id%>_replies").append('<p style="font-size:15px;" class="user_' + data.user_id + '"><img src="' + data.image + '" class="img-circle" style="height:18px; width:18px;">' + data.nickname + ' : <span class="<%=t.id%>_reply">' + data.reply + '</span><a href="/home/timeline_reply_destroying/' + data.id + '" style="float:right;margin-left:10px;"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a><abbr class="timeago" style="font-size:12px; float:right;" title="' + data.time + '">' + data.time + '</abbr></p>');
     $('.<%=t.id%>_reply').last().shuffleLetters();
     $("abbr.timeago").timeago(); // ago 형태로 바꿔준다.
   }); //데이터 붙이기 끝
@@ -386,29 +455,19 @@ $(function() {
     $("#logs").append('<div class="detach_chat row ' + data.user_id + " " + data.guest_id + '" style="padding-bottom:10px;"><span <% if user_signed_in? %> class="dropdown-toggle" type="button" id="dropdownMenu_'+data.id+'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" <% end %> >   ' + data.nickname + 
                       '  </span><span class="shuffle msg"> ' + data.msg + ' </span><abbr class="timeago" style="font-size:5px; float:right;" title="'+data.time+'">'
                       + data.time +  '</abbr>'+ data.ul +'<br></div>');
-    if(data.count>=50)  // 채팅이 50개 이상이라면
-    {$('.detach_chat').first().detach();} // 맨윗채팅을 떼자
+    if(data.count>=50){  // 채팅이 50개 이상이라면
+    $('.detach_chat').first().detach();} // 맨윗채팅을 떼자
     $('.shuffle').last().shuffleLetters();
     $("#btn-input").focus(); // 채팅입력화면으로 가자
     $("abbr.timeago").timeago(); // ago 형태로 바꿔준다.
 
-      <% unless @block_user.nil? %>
-        <% @block_user.each do |id, nickname| %>
-          $('.user_<%=id%>').detach(); // 차단한 유져 모두 detach
-        <% end %>
-      <% end %>
+      $.each( block_user, function( index, value ){
+      $('.user_' + value).detach();
+      });
       
-      <% unless @block_guest.nil? %>
-        <% @block_guest.each do |id, ip_address| %>
-          $('.guest_<%=id%>').detach(); // 차단한 게스트 모두 detach
-        <% end %>
-      <% end %>
-      
-      <% unless @block_me.nil? %>
-        <% @block_me.each do |bg| %>
-          $('.user_<%=bg%>').detach(); // 날 차단한 유져 모두 detach
-        <% end %>
-      <% end %>
+      $.each( block_guest, function( index, value ){
+      $('.guest_' + value).detach();
+      });
   }); //데이터 붙이기 끝
   
     $("abbr.timeago").timeago(); //시간을 ago로 보여주자
@@ -431,23 +490,14 @@ $(function() {
     $("abbr.timeago").timeago(); // ago 형태로 바꿔준다.
     $("#count").append('<div class="detach_count">' + data.count + '</div>')
     {$('.detach_count').first().detach();} // 기존 유져 카운트를 떼자
-    <% unless @block_user.nil? %>
-      <% @block_user.each do |id, nickname| %>
-        $('.user_<%=id%>').detach(); // 차단한 유져 모두 detach
-      <% end %>
-    <% end %>
+
+    $.each( block_user, function( index, value ){
+    $('.user_' + value).detach();
+    });
     
-    <% unless @block_guest.nil? %>
-      <% @block_guest.each do |id, ip_address| %>
-        $('.guest_<%=id%>').detach(); // 차단한 게스트 모두 detach
-      <% end %>
-    <% end %>
-    
-    <% unless @block_me.nil? %>
-      <% @block_me.each do |bg| %>
-        $('.user_<%=bg%>').detach(); // 날 차단한 유져 모두 detach
-      <% end %>
-    <% end %>
+    $.each( block_guest, function( index, value ){
+    $('.guest_' + value).detach();
+    });
   });
   
   $(window).on('scroll', function(){ //타임라인
@@ -463,21 +513,30 @@ $(function() {
 
   <% unless @block_user.nil? %>
     <% @block_user.each do |id, nickname| %>
-      $('.user_<%=id%>').detach(); // 차단한 유져 모두 detach
+      block_user.push('<%=id%>')
     <% end %>
   <% end %>
   
   <% unless @block_guest.nil? %>
     <% @block_guest.each do |id, ip_address| %>
-      $('.guest_<%=id%>').detach(); // 차단한 게스트 모두 detach
+      block_guest.push('<%=id%>')
     <% end %>
   <% end %>
 
   <% unless @block_me.nil? %>
     <% @block_me.each do |bg| %>
-      $('.user_<%=bg%>').detach(); // 날 차단한 유져 모두 detach
+      block_user.push('<%=bg%>')
     <% end %>
   <% end %>
+
+  $.each( block_user, function( index, value ){
+  $('.user_' + value).detach();
+  });
+  
+  $.each( block_guest, function( index, value ){
+  $('.guest_' + value).detach();
+  });
+
   
     
 });

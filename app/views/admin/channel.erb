@@ -1,36 +1,31 @@
 
-<h1>Channels</h1>
+<h1>ChatLogs</h1>
 <br><br>
+<%=@chatlogs.inspect%>
 <table>
   <thead>
     <tr>
       <th style="border:3px solid #ecf0f1;">id (in DB)  </th>
       <th style="border:3px solid #ecf0f1;">user_id  </th>
-      <th style="border:3px solid #ecf0f1;">title  </th>
-      <th style="border:3px solid #ecf0f1;">mediatype  </th>
-      <th style="border:3px solid #ecf0f1;">Image  </th>
+      <th style="border:3px solid #ecf0f1;">channel_id  </th>
+      <th style="border:3px solid #ecf0f1;">guest_id  </th>
+      <th style="border:3px solid #ecf0f1;">msg  </th>
       <th style="border:3px solid #ecf0f1;">created at  </th>
       <th style="border:3px solid #ecf0f1;">updated at  </th>
-      <th style="border:3px solid #ecf0f1;">edit  </th>
       <th colspan="5"></th>
     </tr>
   </thead>
 
   <tbody>
-    <% @channels.each do |c| %>
+    <% @chatlogs.each do |c| %>
       <tr>
         <td style="border:3px solid #ecf0f1;"><%= c.id %>  </td>
         <td style="border:3px solid #ecf0f1;"><%= c.user_id %>  </td>
-        <td style="border:3px solid #ecf0f1;"><%= c.title %>  </td>
-        <td style="border:3px solid #ecf0f1;"><%= c.mediatype %>  </td>
-        <td style="border:3px solid #ecf0f1;"><%= c.image %>  </td>
+        <td style="border:3px solid #ecf0f1;"><%= c.channel_id %>  </td>
+        <td style="border:3px solid #ecf0f1;"><%= c.guest_id %>  </td>
+        <td style="border:3px solid #ecf0f1;"><%= c.msg %>  </td>
         <td style="border:3px solid #ecf0f1;"><%= c.created_at.in_time_zone("Seoul") %>  </td>
         <td style="border:3px solid #ecf0f1;"><%= c.updated_at.in_time_zone("Seoul") %>  </td>
-        <td style="border:3px solid #ecf0f1;">
-            <a href="/admin/channel_edit/<%=c.id%>">[  modify  ]</a>
-            or
-            <a href="/admin/channel_destroy/<%=c.id%>">[  delete  ]</a>
-        </td>
       </tr>
     <% end %>
   </tbody>

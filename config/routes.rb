@@ -31,6 +31,7 @@ Rails.application.routes.draw do
   post 'home/unblocking_guest/:id' => 'home#unblocking_guest'
   post 'home/chat_editing/:id' => 'home#chat_editing'
   get 'admin/channels'
+  get 'admin/channel/:id' => 'admin#channel'
   get 'admin/channel_edit/:id' => 'admin#channel_edit'
   get 'admin/channel_destroy/:id' => 'admin#channel_destroy'
   post 'admin/channel_editing/:id' => 'admin#channel_editing'

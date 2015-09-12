@@ -3,6 +3,9 @@ class AdminController < ApplicationController
   def channels
     @channels = Channel.all
   end
+  def channel
+    @chatlogs = ChatLog.where(:channel_id => params[:id]).all
+  end
   
   def channel_edit
     @channel = Channel.find(params[:id])

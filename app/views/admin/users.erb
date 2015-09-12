@@ -32,8 +32,8 @@
         <td style="border:3px solid #ecf0f1;"><%= u.last_sign_in_at.in_time_zone("Seoul") %>  </td>
         <td style="border:3px solid #ecf0f1;"><%= u.current_sign_in_ip %>  </td>
         <td style="border:3px solid #ecf0f1;"><%= u.last_sign_in_ip %>  </td>
-        <td style="border:3px solid #ecf0f1;"><%= u.created_at %>  </td>
-        <td style="border:3px solid #ecf0f1;"><%= u.updated_at %>  </td>
+        <td style="border:3px solid #ecf0f1;"><%= u.created_at.in_time_zone("Seoul") %>  </td>
+        <td style="border:3px solid #ecf0f1;"><%= u.updated_at.in_time_zone("Seoul") %>  </td>
         <td style="border:3px solid #ecf0f1;">
             <a href="/admin/user_edit/<%=u.id%>">[  modify  ]</a>
             or
