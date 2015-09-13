@@ -108,7 +108,7 @@ class HomeController < ApplicationController
                  @channel_guest_joiner = ChannelJoiner.where(:channel_id => params[:id], :user_id => nil).all
           end
       if @channel.nil? #챗이 없어진경우
-        render text: "<link rel='stylesheet' href='https://bootswatch.com/flatly/bootstrap.min.css'>
+        render text: "<link rel='stylesheet' href='https://bootswatch.com/spacelab/bootstrap.min.css'><style type='text/css'>@import url(https://fonts.googleapis.com/earlyaccess/hanna.css);body,h1,button{font-family: 'Hanna', sans-serif;}</style>
                       <div class='container'><h1><center>챗이 삭제되었습니다.</h1><br><center><button class='btn btn-lg btn-default' onclick='self.close()'>창닫기"
       end
       
@@ -315,7 +315,7 @@ class HomeController < ApplicationController
         end
       edit.save
       end
-        render text: "<link rel='stylesheet' href='https://bootswatch.com/flatly/bootstrap.min.css'>
+        render text: "<link rel='stylesheet' href='https://bootswatch.com/spacelab/bootstrap.min.css'><style type='text/css'>@import url(https://fonts.googleapis.com/earlyaccess/hanna.css);body,h1,button{font-family: 'Hanna', sans-serif;}</style>
                       <div class='container'><h1><center>게시글이 수정되었습니다.</h1><br><center><button class='btn btn-lg btn-default' onclick='self.close()'>창닫기"
   end
   
@@ -345,7 +345,7 @@ class HomeController < ApplicationController
         edit.image = params[:image]
         end
       edit.save
-        render text: "<link rel='stylesheet' href='https://bootswatch.com/flatly/bootstrap.min.css'>
+        render text: "<link rel='stylesheet' href='https://bootswatch.com/spacelab/bootstrap.min.css'><style type='text/css'>@import url(https://fonts.googleapis.com/earlyaccess/hanna.css);body,h1,button{font-family: 'Hanna', sans-serif;}</style>
                       <div class='container'><h1><center>챗이 수정되었습니다.</h1><br><center><button class='btn btn-lg btn-default' onclick='self.close()'>창닫기"
       end
   end
@@ -360,7 +360,7 @@ class HomeController < ApplicationController
         TimelineReply.where(:channel_id => params[:id]).all.destroy
         end
       end
-        render text: "<link rel='stylesheet' href='https://bootswatch.com/flatly/bootstrap.min.css'>
+        render text: "<link rel='stylesheet' href='https://bootswatch.com/spacelab/bootstrap.min.css'><style type='text/css'>@import url(https://fonts.googleapis.com/earlyaccess/hanna.css);body,h1,button{font-family: 'Hanna', sans-serif;}</style>
                       <div class='container'><h1><center>게시글이 삭제되었습니다.</h1><br><center><button class='btn btn-lg btn-default' onclick='self.close()'>창닫기"
   end
   def chat_destroying
@@ -375,7 +375,7 @@ class HomeController < ApplicationController
         TimelineReply.where(:channel_id => params[:id]).all.destroy
         end
       end
-        render text: "<link rel='stylesheet' href='https://bootswatch.com/flatly/bootstrap.min.css'>
+        render text: "<link rel='stylesheet' href='https://bootswatch.com/spacelab/bootstrap.min.css'><style type='text/css'>@import url(https://fonts.googleapis.com/earlyaccess/hanna.css);body,h1,button{font-family: 'Hanna', sans-serif;}</style>
                       <div class='container'><h1><center>챗이 삭제되었습니다.</h1><br><center><button class='btn btn-lg btn-default' onclick='self.close()'>창닫기"
   end
   
@@ -391,7 +391,7 @@ class HomeController < ApplicationController
     if UserBlock.where(:user_id => params[:user_id], :block_user_id => params[:id]).take.nil?
        UserBlock.create(user_id: params[:user_id], block_user_id: params[:id])
     end
-        render text: "<link rel='stylesheet' href='https://bootswatch.com/flatly/bootstrap.min.css'>
+        render text: "<link rel='stylesheet' href='https://bootswatch.com/spacelab/bootstrap.min.css'><style type='text/css'>@import url(https://fonts.googleapis.com/earlyaccess/hanna.css);body,h1,button{font-family: 'Hanna', sans-serif;}</style>
                       <div class='container'><h1><center> 차단했습니다.</h1><br><center><button class='btn btn-lg btn-default' onclick='self.close()'>창닫기"
         
          if User.where(:id => params[:id]).take.image.thumb.url.nil?
@@ -411,7 +411,7 @@ class HomeController < ApplicationController
     if UserBlock.where(:user_id => params[:user_id], :block_guest_id => params[:id]).take.nil?
        UserBlock.create(user_id: params[:user_id], block_guest_id: params[:id])
     end
-        render text: "<link rel='stylesheet' href='https://bootswatch.com/flatly/bootstrap.min.css'>
+        render text: "<link rel='stylesheet' href='https://bootswatch.com/spacelab/bootstrap.min.css'><style type='text/css'>@import url(https://fonts.googleapis.com/earlyaccess/hanna.css);body,h1,button{font-family: 'Hanna', sans-serif;}</style>
                       <div class='container'><h1><center> 차단했습니다.</h1><br><center><button class='btn btn-lg btn-default' onclick='self.close()'>창닫기"
                       
         WebsocketRails["block"].trigger('block', {
@@ -433,7 +433,7 @@ class HomeController < ApplicationController
     unless UserBlock.where(:user_id => params[:user_id], :block_user_id => params[:id]).take.nil?
            UserBlock.where(:user_id => params[:user_id], :block_user_id => params[:id]).take.destroy
     end
-        render text: "<link rel='stylesheet' href='https://bootswatch.com/flatly/bootstrap.min.css'>
+        render text: "<link rel='stylesheet' href='https://bootswatch.com/spacelab/bootstrap.min.css'><style type='text/css'>@import url(https://fonts.googleapis.com/earlyaccess/hanna.css);body,h1,button{font-family: 'Hanna', sans-serif;}</style>
                       <div class='container'><h1><center> 차단해제되었습니다.</h1><br><center><button class='btn btn-lg btn-default' onclick='self.close()'>창닫기"
                       
         WebsocketRails["block"].trigger('unblock', {
@@ -446,7 +446,7 @@ class HomeController < ApplicationController
     unless UserBlock.where(:user_id => params[:user_id], :block_guest_id => params[:id]).take.nil?
            UserBlock.where(:user_id => params[:user_id], :block_guest_id => params[:id]).take.destroy
     end
-        render text: "<link rel='stylesheet' href='https://bootswatch.com/flatly/bootstrap.min.css'>
+        render text: "<link rel='stylesheet' href='https://bootswatch.com/spacelab/bootstrap.min.css'><style type='text/css'>@import url(https://fonts.googleapis.com/earlyaccess/hanna.css);body,h1,button{font-family: 'Hanna', sans-serif;}</style>
                       <div class='container'><h1><center> 차단해제되었습니다.</h1><br><center><button class='btn btn-lg btn-default' onclick='self.close()'>창닫기"
                       
         WebsocketRails["block"].trigger('unblock', {
