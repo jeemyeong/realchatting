@@ -229,9 +229,9 @@ class HomeController < ApplicationController
               msg: params[:msg],
               count: ChatLog.where(:channel_id => params[:channel_id]).count.to_s,
               time: cl.created_at.in_time_zone("Seoul").iso8601,
-              ul: '<ul class="dropdown-menu" aria-labelledby="dropdownMenu_' + cl.id.to_s + '">
-                      <li><a href="/home/block_guest/' + cl.guest.id.to_s + '" target="_blank">손님(' + Guest.where(:id => params[:guest_id]).take.ip_address.to_s.reverse[0..2] +') 차단하기</a></li>
-                      <li><a href="#">Another action</a></li>
+              ul_open: '<ul class="dropdown-menu" aria-labelledby="dropdownMenu_' + cl.id.to_s + '">',
+              li_block: '<li><a href="/home/block_guest/' + cl.guest.id.to_s + '" target="_blank">손님(' + Guest.where(:id => params[:guest_id]).take.ip_address.to_s.reverse[0..2] +') 차단하기</a></li>',
+              ul_close: '<li><a href="#">Another action</a></li>
                       <li><a href="#">Something else here</a></li>
                       <li role="separator" class="divider"></li>
                       <li><a href="#">Separated link</a></li>
@@ -250,13 +250,13 @@ class HomeController < ApplicationController
               msg: params[:msg],
               count: ChatLog.where(:channel_id => params[:channel_id]).count.to_s,
               time: cl.created_at.in_time_zone("Seoul").iso8601,
-              ul: '<ul class="dropdown-menu" aria-labelledby="dropdownMenu_' + cl.id.to_s + '">
-                      <li><a href="/home/block_user/' + cl.user.id.to_s + '" target="_blank">' + User.where(:id => params[:user_id]).take.nickname + ' 차단하기</a></li>
-                      <li><a href="#">Another action</a></li>
-                      <li><a href="#">Something else here</a></li>
-                      <li role="separator" class="divider"></li>
-                      <li><a href="#">Separated link</a></li>
-                    </ul>'
+              ul_open: '<ul class="dropdown-menu" aria-labelledby="dropdownMenu_' + cl.id.to_s + '">',
+              li_block: '<li><a href="/home/block_user/' + cl.user.id.to_s + '" target="_blank">' + User.where(:id => params[:user_id]).take.nickname + ' 차단하기</a></li>',
+              ul_close: '<li><a href="#">Another action</a></li>
+                         <li><a href="#">Something else here</a></li>
+                         <li role="separator" class="divider"></li>
+                         <li><a href="#">Separated link</a></li>
+                        </ul>'
           })
       end
     

@@ -20,9 +20,19 @@ menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
  font-family: 'Hanna', sans-serif;
 }
-
 // 폰트 끝
 
+// li 점 없애기
+li {
+ display: block; 
+}
+//
+
+// a태그에 손가락
+a, button, input[type="submit"] {
+    cursor: pointer;
+}
+// 끝
 
 // 부트스트랩
 body {

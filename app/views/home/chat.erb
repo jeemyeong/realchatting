@@ -59,9 +59,9 @@ body {
         		
               <% if c.user_id == nil %>
                 <div class="detach_chat row guest_<%=c.guest.id%>" style="padding-bottom:10px;">
-                  <span <% if user_signed_in? %> class="dropdown-toggle" type="button" id="dropdownMenu_<%=c.id%>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" <% end %> >
-                  <img src='/assets/hand.jpg' class='img-circle' style='height:30px; width:30px;'>
-                    (<%=c.guest.ip_address.reverse[0..2]%>)
+                  <span <% if user_signed_in? %> class="dropdown-toggle" style="cursor: pointer;" type="button" id="dropdownMenu_<%=c.id%>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" <% end %> >
+                    <img src='/assets/hand.jpg' class='img-circle' style='height:30px; width:30px;'>
+                      (<%=c.guest.ip_address.reverse[0..2]%>)
                   </span>
                   <span class="shuffle msg">
                     <%=c.msg %>
@@ -80,9 +80,9 @@ body {
                 </div>
               <% else %>
                 <div class="detach_chat row user_<%=c.user.id%>" style="padding-bottom:10px;">
-                  <span <% if user_signed_in? %> class="dropdown-toggle" type="button" id="dropdownMenu_<%=c.id%>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" <% end %>>
-                  <img src="<%=c.user.image.thumb.url ? c.user.image.thumb : "/assets/user_image.jpg"%>" class="img-circle" style="height:30px; width:30px;">
-                  <b><%=c.user.nickname %></b>
+                  <span <% if user_signed_in? %> class="dropdown-toggle" style="cursor: pointer;" type="button" id="dropdownMenu_<%=c.id%>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" <% end %>>
+                    <img src="<%=c.user.image.thumb.url ? c.user.image.thumb : "/assets/user_image.jpg"%>" class="img-circle" style="height:30px; width:30px;">
+                    <b><%=c.user.nickname %></b>
                   </span>
                   <span class="shuffle msg">
                     <%=c.msg %>
@@ -139,23 +139,33 @@ body {
       		</div> <!-- cd-timeline-img -->
       		</a>
       		<div class="cd-timeline-content">
-      			<h2><img src="<%=t.user.image.thumb.url ? t.user.image.thumb : "/assets/user_image.jpg"%>" class="img-circle" style="height:25px; width:25px;"><%=t.user.nickname%> : <%=t.title%>
+      			<h2><span <% if user_signed_in? %> class="dropdown-toggle" style="cursor: pointer;" type="button" id="dropdownMenu_<%=t.id%>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" <% end %>>
+      			<img src="<%=t.user.image.thumb.url ? t.user.image.thumb : "/assets/user_image.jpg"%>" class="img-circle" style="height:25px; width:25px;"></span><%=t.user.nickname%> : <%=t.title%>
               <% unless current_user.nil? %>
                 <% if current_user.id == t.user_id %>
                   <a href=# id="timeline_editor_<%=t.id%>" style="float:right;" data-toggle="collapse"><span class="glyphicon glyphicon-scissors" aria-hidden="true" style="font-size:13px;"></span></a>
                 <% end %>
               <% end %>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenu_<%=t.id%>">
+                <% unless current_user.nil? %>
+                  <% unless t.user.id == current_user.id %>
+                    <li><a href="/home/block_user/<%=t.user.id%>" target="popup" onclick="window.open('/home/block_user/<%=t.user.id%>','name','width=600,height=400')"><%=t.user.nickname %> 차단하기</a></li>
+                  <% end %>
+                <% end %>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="#">Separated link</a></li>
+              </ul>
             </h2>
+            
             
             <div class="collapse" style="border-top: 1px solid #e5e5e5; margin-top:50px;" id="<%=t.id%>_timeline">
         			<% unless t.image.url.nil? %>
           			<img src="<%=t.image.url%>" style="width:100%; margin-top:20px;" class="img-rounded">
         			<% end %>
-        			<p><%=t.text%></p>
-              <a href="#<%=t.id%>_repl" style="float:right;" data-toggle="collapse"><span class="glyphicon glyphicon-collapse-down" aria-hidden="true" style="font-size:13px;">댓글달기</span></a>
-        			<span class="cd-date"><abbr class="timeago" style="font-size:12px;" title="<%=t.created_at.in_time_zone("Seoul").iso8601 %>"><%=t.created_at.in_time_zone("Seoul").iso8601%></abbr></span>
-              <div class="collapse" style="border-top: 1px solid #e5e5e5; margin-top:50px;" id="<%=t.id%>_repl">
-                <ul id="<%=t.id%>_replies" style="padding-left: 0px;">
+        			<p><%=t.text%></p><br>
+                <ul id="<%=t.id%>_replies" style="padding-left: 0px; border-top: 1px solid #e5e5e5;">
                 <% t.timeline_replies.each do |r| %>
                   <p style="font-size:15px;" class="user_<%=r.user.id%>">
                     <img src="<%=r.user.image.thumb.url ? r.user.image.thumb : "/assets/user_image.jpg"%>" class="img-circle" style="height:18px; width:18px;">
@@ -165,13 +175,16 @@ body {
                   </p>
                 <% end %>
                 </ul>
+              <a href="#<%=t.id%>_repl" style="float:right;" data-toggle="collapse"><span class="glyphicon glyphicon-collapse-down" aria-hidden="true" style="font-size:13px;"></span></a>
+        			<span class="cd-date"><abbr class="timeago" style="font-size:12px;" title="<%=t.created_at.in_time_zone("Seoul").iso8601 %>"><%=t.created_at.in_time_zone("Seoul").iso8601%></abbr></span>
+              <div class="collapse" style="margin-top:35px;" id="<%=t.id%>_repl">
                 
                 <div class="row">
                   <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-                  <input type="text" id="<%=t.id%>_reply_input" class="form-control" name="reply" placeholder="댓글" style="width:100%" required autofocus>
+                  <input type="text" id="<%=t.id%>_reply_input" class="form-control" name="reply" placeholder="댓글" style="width:100%; height:30px;" required autofocus>
                   </div>
                   <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                  <input type="submit" class="btn btn-primary" id="<%=t.id%>_reply_submit" style="width:100%" value="입력">
+                  <input type="submit" class="btn btn-primary btn-sm" id="<%=t.id%>_reply_submit" style="width:100%" value="입력">
                   </div>
                 </div>
               </div>
@@ -437,9 +450,16 @@ $(function() {
     <% end %> // 타임라인 끝
     
   channel.bind('chat', function(data) {  // 채널에서 오는 데이터를 붙이자
-    $("#logs").append('<div class="detach_chat row ' + data.user_id + " " + data.guest_id + '" style="padding-bottom:10px;"><span <% if user_signed_in? %> class="dropdown-toggle" type="button" id="dropdownMenu_'+data.id+'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" <% end %> >   ' + data.nickname + 
+  if(data.user_id == "user_<%=current_user.id%>"){
+    $("#logs").append('<div class="detach_chat row ' + data.user_id + " " + data.guest_id + '" style="padding-bottom:10px;"><span <% if user_signed_in? %> style="cursor: pointer;"  class="dropdown-toggle" type="button" id="dropdownMenu_'+data.id+'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" <% end %> >   ' + data.nickname + 
                       '  </span><span class="shuffle msg"> ' + data.msg + ' </span><abbr class="timeago" style="font-size:5px; float:right;" title="'+data.time+'">'
-                      + data.time +  '</abbr>'+ data.ul +'<br></div>');
+                      + data.time +  '</abbr>'+ data.ul_open + data.ul_close +'<br></div>');
+  }
+  else {
+    $("#logs").append('<div class="detach_chat row ' + data.user_id + " " + data.guest_id + '" style="padding-bottom:10px;"><span <% if user_signed_in? %> style="cursor: pointer;"  class="dropdown-toggle" type="button" id="dropdownMenu_'+data.id+'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" <% end %> >   ' + data.nickname + 
+                      '  </span><span class="shuffle msg"> ' + data.msg + ' </span><abbr class="timeago" style="font-size:5px; float:right;" title="'+data.time+'">'
+                      + data.time +  '</abbr>'+ data.ul_open + data.li_block + data.ul_close +'<br></div>');
+  }
     if(data.count>=200){  // 채팅이 200개 이상이라면
     $('.detach_chat').first().detach();} // 맨윗채팅을 떼자
     $('.shuffle').last().shuffleLetters();
