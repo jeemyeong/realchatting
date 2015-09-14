@@ -242,7 +242,6 @@ body {
               <div id="detach_block_guest_<%=id%>"><img src='/assets/hand.jpg' class='img-circle' style='height:30px; width:30px;'><span style="font-size:17px;">손님(<%=ip_address%>)</span><a href="/home/unblock_guest/<%=id%>" target="popup" onclick="window.open('/home/unblock_guest/<%=id%>','name','width=600,height=400')"><span class="glyphicon glyphicon-remove" style="float:right;" aria-hidden="true"></span></a></div>
             <% end %>
           <% end %>
-          <br>
         </div>
         <div class="modal-footer">
           <button class="btn btn-sm btn-default" style="margin-left:0px;" data-dismiss="modal">완료</button>
@@ -295,7 +294,7 @@ $(function() {
       <% if user_signed_in? %> //로그인한 경우
         if(data.user_id == <%=current_user.id%>){ //블락한 유져가 나라면
           block_guest.push(data.block_guest_id) //블락게스트에 블락게스트를 추가하자
-          $("#block_list").append('<img src="/assets/hand.jpg" class="img-circle" style="height:30px; width:30px;"><span style="font-size:17px;">손님(' + data.block_guest_ip_address + ')</span><a href="/home/unblock_guest/' + data.block_guest_id + '" target="popup" onclick="window.open(' + "'/home/unblock_guest/" + data.block_guest_id + "','name','width=600,height=400')" + '"><span class="glyphicon glyphicon-remove" style="float:right;" aria-hidden="true"></span></a>')
+          $("#block_list").append('<div id="detach_block_guest_' + data.block_guest_id + '"><img src="/assets/hand.jpg" class="img-circle" style="height:30px; width:30px;"><span style="font-size:17px;">손님(' + data.block_guest_ip_address + ')</span><a href="/home/unblock_guest/' + data.block_guest_id + '" target="popup" onclick="window.open(' + "'/home/unblock_guest/" + data.block_guest_id + "','name','width=600,height=400')" + '"><span class="glyphicon glyphicon-remove" style="float:right;" aria-hidden="true"></span></a></div>')
         }
       <% else %> //내가 게스트인 경우
         if(data.block_guest_id == <%=@guest.id%>){ //블락게스트가 나라면
@@ -308,7 +307,7 @@ $(function() {
       <% if user_signed_in? %> //로그인한 경우
         if(data.user_id == <%=current_user.id%>){ //블락한 유져가 나라면
           block_user.push(data.block_user_id) //블락유져에 블락유져를 추가하자
-          $("#block_list").append('<img src="' + data.block_user_image + '" class="img-circle" style="height:30px; width:30px;"><b style="font-size:17px;">' + data.block_user_nickname + '</b><a href="/home/unblock_user/' + data.block_user_id + '" target="popup" onclick="window.open(' + "'/home/unblock_user/" + data.block_user_id + "','name','width=600,height=400')" + '"><span class="glyphicon glyphicon-remove" style="float:right;" aria-hidden="true"></span></a>')
+          $("#block_list").append('<div id="detach_block_user_' + data.block_user_id + '"><img src="' + data.block_user_image + '" class="img-circle" style="height:30px; width:30px;"><b style="font-size:17px;">' + data.block_user_nickname + '</b><a href="/home/unblock_user/' + data.block_user_id + '" target="popup" onclick="window.open(' + "'/home/unblock_user/" + data.block_user_id + "','name','width=600,height=400')" + '"><span class="glyphicon glyphicon-remove" style="float:right;" aria-hidden="true"></span></a></div>')
         }
         else if (data.block_user_id == <%=current_user.id%>){ //블락유져가 나라면
           block_user.push(data.user_id) //블락유져에 블락한유져를 추가하자
@@ -325,12 +324,13 @@ $(function() {
   });
   
   block.bind('unblock', function(data) {  // 언블락 데이터를 모으자
-  if ( data.block_user_id != 'undefined' ){ //게스트에 대한 데이터라면
+  if ( data.block_user_id === undefined ){ //게스트에 대한 데이터라면
     <% if user_signed_in? %> //로그인한 경우
       if(data.user_id == <%=current_user.id%>){ //블락한 유져가 나라면
         $.grep( block_guest, function( n, i ) {
           return n !== data.block_guest_id;
           });
+        $('#detach_block_guest_' + data.block_guest_id).detach();
       };
     <% else %> //내가 게스트인 경우
       if(data.block_guest_id == <%=@guest.id%>){ //블락게스트가 나라면
@@ -346,6 +346,7 @@ $(function() {
         $.grep( block_user, function( n, i ) {
           return n !== data.block_user_id;
         });
+        $('#detach_block_user_' + data.block_user_id).detach();
       }
       else if (data.block_user_id == <%=current_user.id%>){ //블락유져가 나라면
         $.grep( block_user, function( n, i ) {
