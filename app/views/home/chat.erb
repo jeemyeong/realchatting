@@ -291,7 +291,7 @@ $(function() {
   var block_user = [];
   var block_guest = [];
   block.bind('block', function(data) {  // 블락 데이터를 모으자
-    if ( data.block_user_id != 'undefined' ){ //게스트에 대한 데이터라면
+    if ( data.block_user_id === undefined ){ //게스트에 대한 데이터라면
       <% if user_signed_in? %> //로그인한 경우
         if(data.user_id == <%=current_user.id%>){ //블락한 유져가 나라면
           block_guest.push(data.block_guest_id) //블락게스트에 블락게스트를 추가하자
