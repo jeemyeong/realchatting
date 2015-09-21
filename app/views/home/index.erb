@@ -1,0 +1,670 @@
+        <!-- NAVIGATION BAR -->
+        <nav class="navbar navbar-default navbar-fixed-top" role="banner" style="background-color: #00A6DE;">
+          <div class="container">
+            <div class="navbar-header">
+              <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a href="" class="navbar-brand" style="color: white;">REALCHATTING</a>
+            </div>
+            <nav class="collapse navbar-collapse" role="navigation">
+              <ul class="nav navbar-nav" style="float: left;">
+                <li>
+                  <a href="#sec" style="color: white;margin-left: 120px;">검색창</a>
+                </li>
+              </ul>
+              <ul class="nav navbar-nav" style="float: right;">
+                <% if user_signed_in? %>
+                    <div class="navbar-brand navbar-collapse collapse">
+                        <a href="/users/edit" class="badge" style="font-size:20px" id="current_user"><%=current_user.nickname %>님 환영합니다.</a>
+                    </div>
+                    <li>
+                      <a href="/users/sign_out" style="color: white;">로그아웃</a>
+                    </li>  
+                <% else %>
+                    <li>
+                      <a href="/users/sign_in" style="color: white;">로그인</a>
+                    </li>  
+                <% end %>
+                <li>
+                  <a id="chat_make" href="#sec" style="color: white;">채팅방 만들기</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </nav>
+
+        
+
+        <!--main-->
+        <div class="container">
+        	<div class="row">
+              <!--left-->
+              <div class="col-md-3" id="leftCol">
+                <ul class="nav nav-stacked" id="sidebar" style="position:fixed;">
+                    
+                    <!-- 사용자정보패널 -->
+                    <div class="panel panel-default" style="border-radius:0px; width:270px; height:280px; margin-bottom:10px; border-color:#E6E7E8;box-shadow:0 0 0;webkit box shadow:0 0 0;">
+                        <div class="panel-body" style="text-align:center; margin-top:15px;">
+                            <% if user_signed_in? %>
+                                <a href="/users/edit"><img src="<%= current_user.image.url ? current_user.image : "/assets/user_image.jpg" %>" alt="user_pic" class="img-circle" style="width: 112px; height: 112px;"></a>
+                                <h3><%= current_user.nickname %></h3> <!-- 여따 사용자이름 넣기 -->
+                                <h4><%= current_user.email %></h4>
+                                <!--차단관리-->
+                                <a class="badge" id="block_edit" style="font-size:16px; color:white; float:right;"><b>차단 유져</b></a>
+                                <!--차단관리 끝-->
+                            <% else %>
+                                <img src="/assets/hand.jpg" alt="user_pic" class="img-circle" style="width: 112px; height: 112px;">
+                                <h3>손님</h3> <!-- 여따 사용자이름 넣기 -->
+                                <h4>로그인하시면, 더 즐거워요!</h4>
+                            <% end %>
+                        </div>
+                    </div>
+                    
+                    <!-- 왼쪽메뉴패널 -->
+                    <div class="panel panel-default" style="border-radius:0px; width:270px; margin-bottom:20px; border-color:#E6E7E8;box-shadow:0 0 0;webkit box shadow:0 0 0;"> <!-- footer만지면 바텀마진수정 -->
+                      <div class="panel-body" >
+                        <ul class="nav nav-sidebar">
+                            <li class="active"><a href="#">홈<span class="sr-only">(current)</span></a></li>
+                            <li><a href="#sec0">베스트챗</a></li>
+                            <li>
+                              <a href="#">골라보기</a>
+                              <ul class="nav nav-sidebar">
+                                <li><a href="#sec0"><span class="glyphicon glyphicon-align-left" aria-hidden="true" style="padding-right:10px;"></span>Section 0</a></li>
+                                <li><a href="#sec1"><span class="glyphicon glyphicon-align-left" aria-hidden="true" style="padding-right:10px;"></span>Section 1</a></li>
+                                <li><a href="#sec2"><span class="glyphicon glyphicon-align-left" aria-hidden="true" style="padding-right:10px;"></span>Section 2</a></li>
+                                <li><a href="#sec3"><span class="glyphicon glyphicon-align-left" aria-hidden="true" style="padding-right:10px;"></span>Section 3</a></li>
+                                <li><a href="#sec4"><span class="glyphicon glyphicon-align-left" aria-hidden="true" style="padding-right:10px;"></span>Section 4</a></li>
+                                <li><a href="#sec4"><span class="glyphicon glyphicon-align-left" aria-hidden="true" style="padding-right:10px;"></span>Section 4</a></li>
+                                <li><a href="#sec4"><span class="glyphicon glyphicon-align-left" aria-hidden="true" style="padding-right:10px;"></span>Section 4</a></li>
+                                <li><a href="#sec4"><span class="glyphicon glyphicon-align-left" aria-hidden="true" style="padding-right:10px;"></span>Section 4</a></li>
+                                <li><a href="#sec4"><span class="glyphicon glyphicon-align-left" aria-hidden="true" style="padding-right:10px;"></span>Section 4</a></li>
+                              </ul>
+                            </li>
+                        </ul>
+                      </div>
+                    </div>
+
+                </ul>
+              </div><!--/left-->
+              
+              
+              
+              <!--right-->
+              <div class="col-md-9" style="padding-right:9px;">
+                  
+                <div id="masthead">  
+                  <div class="container">
+                      <div class="row" style="margin-left:-43px;">
+                        
+                        <!-- 메인에 큰주제 사진 뜰부분 - 절대치는 482.156px(해상도에따라달라짐), 세로278Px  -->
+                        <!-- 사진 크롭 수치 바뀌면 수정 -->
+                        <div class="col-md-5" style="padding-right:0;">
+                          <div class="panel panel-default" style="overflow:hidden; border-radius: 0px; height:280px; margin-top:10px; border-color:#E6E7E8;box-shadow:0 0 0;webkit box shadow:0 0 0;">
+                            <!-- 사진 크롭 수치 바뀌면 수정 -->
+                            <img src="<%= @banner.image.url ? @banner.image : "/assets/noimage5.jpg" %>" id="button_<%=@banner.id%>" class="cursor" style="width:auto; height:100%; margin-left:-10%;">
+                          </div>
+                        </div>
+                        
+                        <div class="col-md-4" style="padding-left:10px;">
+                            <div class="panel panel-default" style="border-radius: 0px; height:280px; margin-top:10px; border-color:#E6E7E8;box-shadow:0 0 0;webkit box shadow:0 0 0;">
+                                <div id="banner_title" style="background-color:rgba(0, 0, 0, 0.1);">
+                                    <center><b><span id="chat_<%=@banner.id%>"><%=@banner.title%></span></b>
+                                    <span class="badge" style="font-size:20px"><div id="count"><div class="detach_count"><%=@banner.channel_joiners.all.count%></div></div></span></center>
+                                </div>
+                                <div id="logs" style='overflow:hidden; height:90%; '>
+                                    <% @banner.chat_logs.last(8).each do |c| %> <!--20개만 보여주자--> 
+                                        <% if c.user_id == nil %>
+                                          <div class="detach row guest_<%=c.guest.id%>">
+                                            <div class="col-lg-12 col-md-12" style="margin-bottom:5px;">
+                                              <div class="col-lg-2 col-md-2" style="font-size:12px;"><img src="/assets/hand.jpg" class="img-circle"> (<%=c.guest.ip_address.reverse[0..2]%>) </div>
+                                              <div class="shuffle msg col-lg-8 col-md-8"><%=c.msg %></div>
+                                              <div class="col-lg-2 col-md-2" style="text-align:right; font-size:5px;"><abbr class="timeago" title="<%=c.created_at.in_time_zone("Seoul").iso8601 %>"><%=c.created_at.in_time_zone("Seoul").iso8601 %></abbr></div>
+                                            </div>
+                                          </div>
+                                        <% else %>
+                                          <div class="detach row user_<%=c.user.id%>">
+                                            <div class="col-lg-12 col-md-12" style="margin-bottom:5px;">
+                                              <div class="col-lg-2 col-md-2" style="font-size:12px;"><img src="<%=c.user.image.thumb.url ? c.user.image.thumb : "/assets/user_image.jpg"%>" class="img-circle"><b> <%=c.user.nickname %> </b>  </div>
+                                              <div class="shuffle msg col-lg-8 col-md-8"><%=c.msg %></div>
+                                              <div class="col-lg-2 col-md-2" style="text-align:right; font-size:5px;"><abbr class="timeago" title="<%=c.created_at.in_time_zone("Seoul").iso8601 %>"><%=c.created_at.in_time_zone("Seoul").iso8601 %></abbr></div>
+                                            </div>
+                                          </div>
+                                        <% end %>
+                                      <% end %>
+                                  </div>
+                            </div>
+                        </div>
+                      </div> 
+                  </div><!--/container-->
+                </div><!--/masthead-->
+                  
+                  
+                <div id="sec0" class="notice notice-danger" style="margin-left:-12px; margin-top:-8px;">
+                    <strong>BEST CHAT</strong>   어쩌구저쩌구의 설명
+                </div>
+                  <div class="row">
+                  
+                  <div class="col-md-3" style="padding-left:3px;">
+                  				<div class="cuadro_intro_hover " style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8">
+              						<p style="text-align:center; margin-top:20px;">
+              							<img src="http://placehold.it/500x330" class="img-responsive" alt="">
+              						</p>
+              						<div class="caption">
+              							<div class="blur"></div>
+              							<div class="caption-text">
+              								<h3 style="border-top:2px solid white; border-bottom:2px solid white; padding:10px;">무한도전</h3>
+              								<p>Loren ipsum dolor si amet ipsum dolor si amet ipsum dolor...</p>
+              								<a class=" btn btn-default" href="#"><span class="glyphicon glyphicon-plus"> INFO</span></a>
+              							</div>
+              						</div>
+              					</div>
+              	   </div>
+              	   
+                   <div class="col-md-3" style="padding-left:0px;">
+                  				<div class="cuadro_intro_hover " style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8">
+              						<p style="text-align:center; margin-top:20px;">
+              							<img src="http://placehold.it/500x330" class="img-responsive" alt="">
+              						</p>
+              						<div class="caption">
+              							<div class="blur"></div>
+              							<div class="caption-text">
+              								<h3 style="border-top:2px solid white; border-bottom:2px solid white; padding:10px;">용팔이</h3>
+              								<p>Loren ipsum dolor si amet ipsum dolor si amet ipsum dolor...</p>
+              								<a class=" btn btn-default" href="#"><span class="glyphicon glyphicon-plus"> INFO</span></a>
+              							</div>
+              						</div>
+              					</div>
+              	   </div>
+              	   
+              	   <div class="col-md-3" style="padding-left:0px;">
+                  				<div class="cuadro_intro_hover " style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8">
+              						<p style="text-align:center; margin-top:20px;">
+              							<img src="http://placehold.it/500x330" class="img-responsive" alt="">
+              						</p>
+              						<div class="caption">
+              							<div class="blur"></div>
+              							<div class="caption-text">
+              								<h3 style="border-top:2px solid white; border-bottom:2px solid white; padding:10px;">우리결혼했어요</h3>
+              								<p>Loren ipsum dolor si amet ipsum dolor si amet ipsum dolor...</p>
+              								<a class=" btn btn-default" href="#"><span class="glyphicon glyphicon-plus"> INFO</span></a>
+              							</div>
+              						</div>
+              					</div>
+              	   </div>
+              	   
+              	   <div class="col-md-3" style="padding-left:0px;">
+                  				<div class="cuadro_intro_hover " style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8">
+              						<p style="text-align:center; margin-top:20px;">
+              							<img src="http://placehold.it/500x330" class="img-responsive" alt="">
+              						</p>
+              						<div class="caption">
+              							<div class="blur"></div>
+              							<div class="caption-text">
+              								<h3 style="border-top:2px solid white; border-bottom:2px solid white; padding:10px;">진격의거인</h3>
+              								<p>Loren ipsum dolor si amet ipsum dolor si amet ipsum dolor...</p>
+              								<a class=" btn btn-default" href="#"><span class="glyphicon glyphicon-plus"> INFO</span></a>
+              							</div>
+              						</div>
+              					</div>
+              	   </div>
+              	    
+            	    </div>
+                <hr style="color: white;">
+                
+                
+                
+
+                <div id="sec1" class="notice notice-info" style="margin-left:-12px; margin-top:-8px;">
+                    <strong>SECTION 1</strong>   어쩌구저쩌구의 설명
+                </div>
+                <div class="row">
+                  <div class="col-md-3" style="padding-left:3px;">
+                    <div class="panel panel-default" style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8">
+                      <div class="panel-heading"><h3>Hello.</h3></div>
+                      <div class="panel-body">첫번째방</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3" style="padding-left:0px;">
+                    <div class="panel panel-default" style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8">
+                      <div class="panel-heading"><h3>Hello.</h3></div>
+                      <div class="panel-body">두번째방</div>
+                    </div>
+                  </div>  
+                  <div class="col-md-3" style="padding-left:0px;">
+                    <div class="panel panel-default" style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8">
+                      <div class="panel-heading"><h3>Hello.</h3></div>
+                      <div class="panel-body">두번째방</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3" style="padding-left:0px;">
+                    <div class="panel panel-default" style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8">
+                      <div class="panel-heading"><h3>Hello.</h3></div>
+                      <div class="panel-body">두번째방</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3" style="padding-left:3px;">
+                    <div class="panel panel-default" style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8">
+                      <div class="panel-heading"><h3>Hello.</h3></div>
+                      <div class="panel-body">첫번째방</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3" style="padding-left:0px;">
+                    <div class="panel panel-default" style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8">
+                      <div class="panel-heading"><h3>Hello.</h3></div>
+                      <div class="panel-body">두번째방</div>
+                    </div>
+                  </div>  
+                  <div class="col-md-3" style="padding-left:0px;">
+                    <div class="panel panel-default" style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8">
+                      <div class="panel-heading"><h3>Hello.</h3></div>
+                      <div class="panel-body">두번째방</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3" style="padding-left:0px;">
+                    <div class="panel panel-default" style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8">
+                      <div class="panel-heading"><h3>Hello.</h3></div>
+                      <div class="panel-body">두번째방</div>
+                    </div>
+                  </div>
+                </div>
+                
+                
+                <hr>
+                <div id="sec2" class="notice notice-info" style="margin-left:-12px; margin-top:-8px;">
+                    <strong>SECTION 2</strong>   어쩌구저쩌구의 설명
+                </div>
+                <div class="row">
+                  <div class="col-md-3" style="padding-left:3px;">
+                    <div class="panel panel-default" style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8">
+                      <div class="panel-heading"><h3>Hello.</h3></div>
+                      <div class="panel-body">첫번째방</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3" style="padding-left:0px;">
+                    <div class="panel panel-default" style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8">
+                      <div class="panel-heading"><h3>Hello.</h3></div>
+                      <div class="panel-body">두번째방</div>
+                    </div>
+                  </div>  
+                  <div class="col-md-3" style="padding-left:0px;">
+                    <div class="panel panel-default" style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8">
+                      <div class="panel-heading"><h3>Hello.</h3></div>
+                      <div class="panel-body">두번째방</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3" style="padding-left:0px;">
+                    <div class="panel panel-default" style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8">
+                      <div class="panel-heading"><h3>Hello.</h3></div>
+                      <div class="panel-body">두번째방</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <hr>
+                
+                
+                <div id="sec3" class="notice notice-info" style="margin-left:-12px; margin-top:-8px;">
+                    <strong>SECTION 3</strong>   어쩌구저쩌구의 설명
+                </div>
+                <div class="row">
+                  <div class="col-md-3" style="padding-left:3px;">
+                    <div class="panel panel-default" style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8">
+                      <div class="panel-heading"><h3>Hello.</h3></div>
+                      <div class="panel-body">첫번째방</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3" style="padding-left:0px;">
+                    <div class="panel panel-default" style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8">
+                      <div class="panel-heading"><h3>Hello.</h3></div>
+                      <div class="panel-body">두번째방</div>
+                    </div>
+                  </div>  
+                  <div class="col-md-3" style="padding-left:0px;">
+                    <div class="panel panel-default" style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8">
+                      <div class="panel-heading"><h3>Hello.</h3></div>
+                      <div class="panel-body">두번째방</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3" style="padding-left:0px;">
+                    <div class="panel panel-default" style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8">
+                      <div class="panel-heading"><h3>Hello.</h3></div>
+                      <div class="panel-body">두번째방</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <hr>
+                
+                <div id="sec4" class="notice notice-info" style="margin-left:-12px; margin-top:-8px;">
+                    <strong>SECTION 4</strong>   어쩌구저쩌구의 설명
+                </div>
+                <div class="row">
+                  <div class="col-md-3" style="padding-left:3px;">
+                    <div class="panel panel-default" style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8">
+                      <div class="panel-heading"><h3>Hello.</h3></div>
+                      <div class="panel-body">첫번째방</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3" style="padding-left:0px;">
+                    <div class="panel panel-default" style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8">
+                      <div class="panel-heading"><h3>Hello.</h3></div>
+                      <div class="panel-body">두번째방</div>
+                    </div>
+                  </div>  
+                  <div class="col-md-3" style="padding-left:0px;">
+                    <div class="panel panel-default" style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8">
+                      <div class="panel-heading"><h3>Hello.</h3></div>
+                      <div class="panel-body">두번째방</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3" style="padding-left:0px;">
+                    <div class="panel panel-default" style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8">
+                      <div class="panel-heading"><h3>Hello.</h3></div>
+                      <div class="panel-body">두번째방</div>
+                    </div>
+                  </div>
+                </div>
+                
+                
+                </div><!--/right-->
+          	</div><!--/row-->
+        </div><!--/container-->
+        
+        
+        <!-- 채팅방만들기 모달 -->
+         <div class="modal fade" id="chat_maker" >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <%= form_tag "/home/chat_making", method: "post", enctype: "multipart/form-data", class: "form-signin" do %>
+                  <div class="modal-header">
+                    <h2 class="modal-title form-signin-heading"><b>챗 만들기</b></h2>
+                  </div>
+                  <div class="modal-body">
+                    <label for="inputTitle">챗 이름</label>
+                    <input type="text" id="inputTitle" class="form-control" name="title" placeholder="챗 이름" required autofocus>
+                    <br>
+                    <label for="inputImage">이미지(선택사항)</label>
+                    <input type="file" id="inputImage" class="form-control" placeholder="챗 이미지" name="image">
+                    <br>
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn btn-lg btn-default" data-dismiss="modal">취소</button>
+                    <button class="btn btn-lg btn-primary">챗 만들기</button>
+                  </div>
+                  <% end %>
+                </div><!-- /.modal-content -->
+              </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+            
+            <!-- 블록에디터 모달-->
+            <div class="modal fade" id="block_editor" >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="form-signin">
+                    <div class="modal-header">
+                      <h2 class="modal-title form-signin-heading"><b>차단 유져</b></h2>
+                    </div>
+                    <div class="modal-body" id="block_list">
+                      <% unless @block_user.nil? %>
+                        <% @block_user.each do |id, nickname| %>
+                          <div id="detach_block_user_<%=id%>"><img src="<%=nickname.second%>" class='img-circle' style='height:30px; width:30px;'><b style="font-size:17px;"><%=nickname.first%></b><a href="/home/unblock_user/<%=id%>" target="popup" onclick="window.open('/home/unblock_user/<%=id%>','name','width=600,height=400')"><span class="glyphicon glyphicon-remove" style="float:right;" aria-hidden="true"></span></a></div>
+                        <% end %>
+                      <% end %>
+                      
+                      <% unless @block_guest.nil? %>
+                        <% @block_guest.each do |id, ip_address| %>
+                          <div id="detach_block_guest_<%=id%>"><img src='/assets/hand.jpg' class='img-circle' style='height:30px; width:30px;'><span style="font-size:17px;">손님(<%=ip_address%>)</span><a href="/home/unblock_guest/<%=id%>" target="popup" onclick="window.open('/home/unblock_guest/<%=id%>','name','width=600,height=400')"><span class="glyphicon glyphicon-remove" style="float:right;" aria-hidden="true"></span></a></div>
+                        <% end %>
+                      <% end %>
+                      <br>
+                    </div>
+                    <div class="modal-footer">
+                      <button class="btn btn-sm btn-default" style="margin-left:0px;" data-dismiss="modal">완료</button>
+                    </div>
+                  </div>
+                </div><!-- /.modal-content -->
+              </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+
+
+
+        
+
+
+
+
+
+        
+        <!-- JavaScript jQuery code from Bootply.com editor  -->
+        
+        
+        <script type='text/javascript'>
+        
+        $(document).ready(function() {
+            
+            var url      = window.location.host + '/websocket';
+            var websocket = new WebSocketRails(url);
+    
+    /**********차단유저**************/
+     var block = websocket.subscribe("block");  
+      var block_user = [];
+      var block_guest = [];
+      
+      block.bind('block', function(data) {  // 블락 데이터를 모으자
+        if ( data.block_user_id != 'undefined' ){ //게스트에 대한 데이터라면
+          <% if user_signed_in? %> //로그인한 경우
+            if(data.user_id == <%=current_user.id%>){ //블락한 유져가 나라면
+              block_guest.push(data.block_guest_id) //블락게스트에 블락게스트를 추가하자
+              $("#block_list").append('<img src="/assets/hand.jpg" class="img-circle" style="height:30px; width:30px;"><span style="font-size:17px;">손님(' + data.block_guest_ip_address + ')</span><a href="/home/unblock_guest/' + data.block_guest_id + '" target="popup" onclick="window.open(' + "'/home/unblock_guest/" + data.block_guest_id + "','name','width=600,height=400')" + '"><span class="glyphicon glyphicon-remove" style="float:right;" aria-hidden="true"></span></a>')
+            }
+          <% else %> //내가 게스트인 경우
+            if(data.block_guest_id == <%=@guest.id%>){ //블락게스트가 나라면
+              block_user.push(data.user_id) //블락유져에 블락한유져를 추가하자
+            }
+          <% end %>
+    
+        }
+        else { //유져에 대한 데이터라면
+          <% if user_signed_in? %> //로그인한 경우
+            if(data.user_id == <%=current_user.id%>){ //블락한 유져가 나라면
+              block_user.push(data.block_user_id) //블락유져에 블락유져를 추가하자
+              $("#block_list").append('<img src="' + data.block_user_image + '" class="img-circle" style="height:30px; width:30px;"><b style="font-size:17px;">' + data.block_user_nickname + '</b><a href="/home/unblock_user/' + data.block_user_id + '" target="popup" onclick="window.open(' + "'/home/unblock_user/" + data.block_user_id + "','name','width=600,height=400')" + '"><span class="glyphicon glyphicon-remove" style="float:right;" aria-hidden="true"></span></a>')
+            }
+            else if (data.block_user_id == <%=current_user.id%>){ //블락유져가 나라면
+              block_user.push(data.user_id) //블락유져에 블락한유져를 추가하자
+            }
+          <% end %>
+        };
+        $.each( block_user, function( index, value ){
+        $('.user_' + value).detach();
+        });
+        
+        $.each( block_guest, function( index, value ){
+        $('.guest_' + value).detach();
+        });
+      });
+      
+      block.bind('unblock', function(data) {  // 언블락 데이터를 모으자
+      if ( data.block_user_id != 'undefined' ){ //게스트에 대한 데이터라면
+        <% if user_signed_in? %> //로그인한 경우
+          if(data.user_id == <%=current_user.id%>){ //블락한 유져가 나라면
+            $.grep( block_guest, function( n, i ) {
+              return n !== data.block_guest_id;
+              });
+          };
+        <% else %> //내가 게스트인 경우
+          if(data.block_guest_id == <%=@guest.id%>){ //블락게스트가 나라면
+            $.grep( block_user, function( n, i ) {
+              return n !== data.user_id;
+            });
+          }
+        <% end %>
+      }
+      else { //유져에 대한 데이터라면
+        <% if user_signed_in? %> //로그인한 경우
+          if(data.user_id == <%=current_user.id%>){ //블락한 유져가 나라면
+            $.grep( block_user, function( n, i ) {
+              return n !== data.block_user_id;
+            });
+          }
+          else if (data.block_user_id == <%=current_user.id%>){ //블락유져가 나라면
+            $.grep( block_user, function( n, i ) {
+              return n !== data.user_id;
+            });
+          };
+        <% end %>
+      };
+        $('#detach_block_user_' + data.block_user_id).detach();
+        $('#detach_block_guest_' + data.block_guest_id).detach();
+      });
+        
+        <% unless @block_user.nil? %>
+          <% @block_user.each do |id, nickname| %>
+            block_user.push('<%=id%>')
+          <% end %>
+        <% end %>
+        
+        <% unless @block_guest.nil? %>
+          <% @block_guest.each do |id, ip_address| %>
+            block_guest.push('<%=id%>')
+          <% end %>
+        <% end %>
+      
+        <% unless @block_me.nil? %>
+          <% @block_me.each do |bg| %>
+            block_user.push('<%=bg%>')
+          <% end %>
+        <% end %>
+      
+        $.each( block_user, function( index, value ){
+        $('.user_' + value).detach();
+        });
+        
+        $.each( block_guest, function( index, value ){
+        $('.guest_' + value).detach();
+        });
+        
+        $("#block_edit").click(function(){ //차단 유져
+               $('#block_editor').modal();
+        })
+    /**********차단유저**************/
+    
+    
+    //배너 시작
+    $("#chat_<%=@banner.id%>").Morphext({ //배너 버튼의 텍스트 스타일 설정
+        animation: "flash",
+        speed: 3000,
+        complete: function () {
+        }
+    });
+    var channel = websocket.subscribe("chat_<%=@banner.id%>");  //웹소켓에서 banner.id로 데이터를 받자
+    channel.bind('chat', function(data) {  // 채널에서 오는 데이터를 붙이자.
+             $("#logs").append('<div class="detach row ' + data.user_id + " " + data.guest_id + '"><div class="col-lg-12 col-md-12" style="margin-bottom:5px;">\
+                                <div class="col-lg-2 col-md-2" style="font-size:12px;">' + data.nickname + '</div>\
+                                <div class="shuffle msg col-lg-6 col-md-6">' + data.msg + '</div>\
+                                <div class="col-lg-4 col-md-4" style="text-align:right; font-size:5px;"><abbr class="timeago" title="' + data.time + '">' + data.time + '</abbr></div></div></div>');
+                        if(data.count>=30)  // 채팅이 10개 이상이라면
+                        $('.detach').first().detach(); // 맨윗채팅을 떼자
+                        $('.shuffle').last().shuffleLetters(); // 입력한 채팅이 셔플한다
+                        $("#logs").scrollTop( $( "#logs" ).prop( "scrollHeight" ) );
+                        $("#logs").perfectScrollbar('update');
+                        $("abbr.timeago").timeago(); // ago 형태로 바꿔준다.
+                          $.each( block_user, function( index, value ){
+                          $('.user_' + value).detach();
+                          });
+                          
+                          $.each( block_guest, function( index, value ){
+                          $('.guest_' + value).detach();
+                          });
+                        }); //배너 채팅 붙이기 끝
+                        
+    $("#message_list").scrollTop( $( "#message_list" ).prop( "scrollHeight" ) );
+    $("#message_list").perfectScrollbar('update');
+    $('.shuffle').shuffleLetters(); //사이트에 들어오면 배너 채팅화면이 셔플한다.
+    setInterval(function () { // 배너의 채팅화면이 5초마다 셔플한다.
+    $('.shuffle').shuffleLetters(); 
+    }, 5000); 
+    $("#button_<%=@banner.id%>").click(function(){ //배너를 눌렀을때 팝업으로 뜨자
+     window.open('/home/chat/<%=@banner.id%>', '_blank', 'width=1600, height=800, toolbar=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no');
+    })
+    var user = websocket.subscribe("user_<%=@banner.id%>");  //웹소켓에서 유져를 데이터로 받자.
+    user.bind('chat', function(data) {  // 채널에서 오는 접속중 데이터를 붙이자
+    $("#count").append('<div class="detach_count">' + data.count + '</div>')
+    {$('.detach_count').first().detach();} // 기존 유져 카운트를 떼자
+    });
+    //배너 끝
+            <% if user_signed_in? %> //로그인 된 경우
+                $("#current_user").Morphext({ //로그인된 current_user의 텍스트 스타일을 입히자
+                    animation: "pulse",
+                    speed: 3000,
+                    complete: function () {
+                    }
+                });
+            <% end %> //로그인 끝
+            
+            $("abbr.timeago").timeago(); //ago형태로 바꿔준다.
+            
+            $("#logs").perfectScrollbar(); //챗로그 스크롤바
+            
+
+            /* activate sidebar */
+            $('#sidebar').affix({
+              offset: {
+                top: 235
+              }
+            });
+            
+            /* activate scrollspy menu */
+            var $body   = $(document.body);
+            var navHeight = $('.navbar').outerHeight(true) + 10;
+            
+            $body.scrollspy({
+            	target: '#leftCol',
+            	offset: navHeight
+            });
+            
+            /* smooth scrolling sections */
+            $('a[href*=#]:not([href=#])').click(function() {
+                if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
+                  var target = $(this.hash);
+                  target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+                  if (target.length) {
+                    $('html,body').animate({
+                      scrollTop: target.offset().top - 50
+                    }, 1000);
+                    return false;
+                  }
+                }
+            });
+            
+            $("#chat_make").click(function(){ //챗방 만들기 modal형태
+               $('#chat_maker').modal();
+            })
+            $("#block_edit").click(function(){ //차단 유져
+               $('#block_editor').modal();
+            })   
+        
+        });
+        
+        
+        
+        
+        
+        
+        
+        </script>
+        
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+          ga('create', 'UA-40413119-1', 'bootply.com');
+          ga('send', 'pageview');
+        </script>
+  
+  
