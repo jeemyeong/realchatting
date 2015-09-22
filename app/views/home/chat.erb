@@ -454,12 +454,12 @@ $(function() {
   
   if(data.user_id == "user_<% if user_signed_in? %><%=current_user.id%><% end %>"){
     $("#logs").append('<div class="detach_chat row ' + data.user_id + " " + data.guest_id + '" style="padding-bottom:10px;"><span <% if user_signed_in? %> style="cursor: pointer;"  class="dropdown-toggle" type="button" id="dropdownMenu_'+data.id+'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" <% end %> >   ' + data.nickname + 
-                      '  </span><span class="shuffle msg"> ' + data.msg + ' </span><abbr class="timeago" style="font-size:5px; float:right;" title="'+data.time+'">'
+                      '  </span><span class="shuffle msg"> ' + data.msg + ' </span><abbr class="timeago" style="font-size:12px; float:right;" title="'+data.time+'">'
                       + data.time +  '</abbr>'+ data.ul_open + data.ul_close +'<br></div>');
   }
   else {
     $("#logs").append('<div class="detach_chat row ' + data.user_id + " " + data.guest_id + '" style="padding-bottom:10px;"><span <% if user_signed_in? %> style="cursor: pointer;"  class="dropdown-toggle" type="button" id="dropdownMenu_'+data.id+'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" <% end %> >   ' + data.nickname + 
-                      '  </span><span class="shuffle msg"> ' + data.msg + ' </span><abbr class="timeago" style="font-size:5px; float:right;" title="'+data.time+'">'
+                      '  </span><span class="shuffle msg"> ' + data.msg + ' </span><abbr class="timeago" style="font-size:12px; float:right;" title="'+data.time+'">'
                       + data.time +  '</abbr>'+ data.ul_open + data.li_block + data.ul_close +'<br></div>');
   }
     if(data.count>=200){  // 채팅이 200개 이상이라면
@@ -515,8 +515,9 @@ $(function() {
   	});
   });
   
-  $("#chatlogs").perfectScrollbar(); //챗로그 스크롤바
+  // $("#chatlogs").perfectScrollbar(); //챗로그 스크롤바
   $("#timeline").perfectScrollbar(); //타임라인 스크롤바
+  $("#allchat_content").perfectScrollbar(); //채팅창
 
   <% unless @block_user.nil? %>
     <% @block_user.each do |id, nickname| %>
