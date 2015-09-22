@@ -104,8 +104,18 @@
                         <!-- 사진 크롭 수치 바뀌면 수정 -->
                         <div class="col-md-5" style="padding-right:0;">
                           <div class="panel panel-default" style="overflow:hidden; border-radius: 0px; height:280px; margin-top:10px; border-color:#E6E7E8;box-shadow:0 0 0;webkit box shadow:0 0 0;">
+                  				<div class="cuadro_intro_hover" style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8; height:100%;">
                             <!-- 사진 크롭 수치 바뀌면 수정 -->
                             <img src="<%= @banner.image.url ? @banner.image : "/assets/noimage5.jpg" %>" id="button_<%=@banner.id%>" class="cursor" style="width:auto; height:100%; margin-left:-10%;">
+                						<div class="caption" style="top:230px;">
+                							<div class="blur"></div>
+                							<div class="caption-text">
+                								<h3 style="border-top:2px solid white; border-bottom:2px solid white; padding:10px;"><%=@banner.title%></h3>
+                								<p>Loren ipsum dolor si amet ipsum dolor si amet ipsum dolor...</p>
+                								<a class=" btn btn-default" href="#"><span class="glyphicon glyphicon-plus"> INFO</span></a>
+                							</div>
+                						</div>
+                					</div>
                           </div>
                         </div>
                         
