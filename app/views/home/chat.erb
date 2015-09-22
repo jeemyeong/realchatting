@@ -364,6 +364,8 @@ $(function() {
         $('.shuffle').shuffleLetters(); 
         }, 20000); // 채팅화면이 20초마다 셔플한다.
   	setTimeout(function(){
+    $("#allchat_content").scrollTop( $( "#allchat_content" ).prop( "scrollHeight" ) );
+    $("#allchat_content").perfectScrollbar('update');
     $("#btn-input").focus(); // 채팅입력화면으로 가자
 	},50);
 
@@ -463,10 +465,13 @@ $(function() {
                       + data.time +  '</abbr>'+ data.ul_open + data.li_block + data.ul_close +'<br></div>');
   }
     if(data.count>=200){  // 채팅이 200개 이상이라면
-    $('.detach_chat').first().detach();} // 맨윗채팅을 떼자
+    $('.detach_chat').first().detach();
+    } // 맨윗채팅을 떼자
     $('.shuffle').last().shuffleLetters();
     $("#btn-input").focus(); // 채팅입력화면으로 가자
     $("abbr.timeago").timeago(); // ago 형태로 바꿔준다.
+    $("#allchat_content").scrollTop( $( "#allchat_content" ).prop( "scrollHeight" ) );
+    $("#allchat_content").perfectScrollbar('update');
 
       $.each( block_user, function( index, value ){
       $('.user_' + value).detach();
@@ -476,7 +481,8 @@ $(function() {
       $('.guest_' + value).detach();
       });
   }); //데이터 붙이기 끝
-  
+
+    
     $("abbr.timeago").timeago(); //시간을 ago로 보여주자
 
         setInterval(function () { //접속중이라는 데이터를 10초마다 컨트롤러로 보내자
