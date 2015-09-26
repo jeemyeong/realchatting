@@ -352,11 +352,11 @@ body {
 }
 .cuadro_intro_hover:hover .caption{
 		opacity: 1;
-		transform: translateY(-150px);
-		-webkit-transform:translateY(-150px);
-		-moz-transform:translateY(-150px);
-		-ms-transform:translateY(-150px);
-		-o-transform:translateY(-150px);
+		transform: translateY(-130px);
+		-webkit-transform:translateY(-130px);
+		-moz-transform:translateY(-130px);
+		-ms-transform:translateY(-130px);
+		-o-transform:translateY(-130px);
 }
 .cuadro_intro_hover img{
 	  z-index: 4;
@@ -387,6 +387,8 @@ body {
 		top:-20px;
 		width: 100%;
 }
+
+// 로그에서
 #logs div div{
     padding: 0px;
     margin: 0px;
@@ -395,8 +397,18 @@ body {
     width: 20px;
     height: 20px;
 }
+#logs div div#nickname{
+    font-size:12px;
+}
+#logs div div#time{
+    text-align:right; 
+    font-size:5px;
+}
+#logs div div.msg{
+    font-size:12px;
+}
 #logs div {
-    margin: 5px 20px 5px 20px;
+    margin: 5px 7px 5px 7px;
 }
 #banner_title{
  heigt: 10%; 
@@ -410,5 +422,32 @@ body {
 
 #allchat_content{
     height: 70%;
-  
+}
+#allchat_content div img{
+    height: 20px;
+    width: 20px;
+}
+#chatlogs {
+  position:relative;
+  margin:1px auto; 
+  padding:20px; 
+  height: 800px; 
+  overflow: hidden; 
+  border-width: 5px;
+}
+#timeline { 
+  position:relative; 
+  margin:1px auto; 
+  padding:10px; 
+  height: 800px; 
+  overflow: hidden; 
+  border-width: 5px;
+}
+#allchat_content{
+ overflow: hidden; 
+ position:relative; 
+}
+.container #logs{
+ overflow: hidden; 
+ position:relative; 
 }

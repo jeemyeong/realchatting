@@ -3,8 +3,7 @@
 body {
  overflow: hidden; 
 }
-#chatlogs { position:relative; margin:1px auto; padding:20px; height: 800px; overflow: hidden; border-width: 5px;}
-#timeline { position:relative; margin:1px auto; padding:10px; height: 800px; overflow: hidden; border-width: 5px;}
+
 }  
 .dropdown-menu {
  position: relative;
@@ -60,7 +59,7 @@ body {
               <% if c.user_id == nil %>
                 <div class="detach_chat row guest_<%=c.guest.id%>" style="padding-bottom:10px;">
                   <span <% if user_signed_in? %> class="dropdown-toggle" style="cursor: pointer;" type="button" id="dropdownMenu_<%=c.id%>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" <% end %> >
-                    <img src='/assets/hand.jpg' class='img-circle' style='height:30px; width:30px;'>
+                    <img src='/assets/hand.jpg' class='img-circle'>
                       (<%=c.guest.ip_address.reverse[0..2]%>)
                   </span>
                   <span class="shuffle msg">
@@ -81,7 +80,7 @@ body {
               <% else %>
                 <div class="detach_chat row user_<%=c.user.id%>" style="padding-bottom:10px;">
                   <span <% if user_signed_in? %> class="dropdown-toggle" style="cursor: pointer;" type="button" id="dropdownMenu_<%=c.id%>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" <% end %>>
-                    <img src="<%=c.user.image.thumb.url ? c.user.image.thumb : "/assets/user_image.jpg"%>" class="img-circle" style="height:30px; width:30px;">
+                    <img src="<%=c.user.image.thumb.url ? c.user.image.thumb : "/assets/user_image.jpg"%>" class="img-circle">
                     <b><%=c.user.nickname %></b>
                   </span>
                   <span class="shuffle msg">

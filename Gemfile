@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'nokogiri'
 gem 'devise'
 gem 'websocket-rails'
 gem "mini_magick"

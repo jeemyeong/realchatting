@@ -1,9 +1,9 @@
 class HomeController < ApplicationController
     before_action :authenticate_user!, only: [:chat_maker, :chat_making, :timeline_maker, :timeline_reply_maker]
   def intro
-      if Channel.take.nil?                                    #채널에방이 아무것도 없다면
-         Channel.create(:user_id => "0", :title => "default") #user_id 0인 default채널을 하나 만들자.
-      end
+      # if Channel.take.nil?                                    #채널에방이 아무것도 없다면
+      #   Channel.create(:user_id => "0", :title => "default") #user_id 0인 default채널을 하나 만들자.
+      # end #시드 주면 필요없는 코드
       if ChannelJoiner.group(:channel_id).count(:id).first.nil? #접속자가 모두 0이라면
          banner_id = Channel.all.sample.id                      #배너는 하나를 샘플로 뽑자
       else
@@ -14,13 +14,17 @@ class HomeController < ApplicationController
   end
   
   def index
-      if Channel.take.nil?                                    #채널에방이 아무것도 없다면
-         Channel.create(:user_id => "0", :title => "default") #user_id 0인 default채널을 하나 만들자.
-      end
+      # if Channel.take.nil?                                    #채널에방이 아무것도 없다면
+        # Channel.create(:user_id => "0", :title => "default") #user_id 0인 default채널을 하나 만들자.
+      # end #시드 주면 필요없는 코드
       if ChannelJoiner.group(:channel_id).count(:id).first.nil? #접속자가 모두 0이라면
-         banner_id = Channel.all.sample.id                      #배너는 하나를 샘플로 뽑자
+         if ChatLog.group(:channel_id).count(:id).first.nil? #챗로그가 많이 있는 방
+         banner_id = Channel.all.sample.id
+         else 
+         banner_id = ChatLog.group(:channel_id).count(:id).first.first #챗로그가 많이 있는 방
+         end
       else
-         banner_id =ChannelJoiner.group(:channel_id).count(:id).first.first #그게아니라면 접속자 1위방
+         banner_id = ChannelJoiner.group(:channel_id).count(:id).first.first #그게아니라면 접속자 1위방
       end
       @banner = Channel.where(:id => banner_id).take #현재접속자 수 1위방
       @channels = Channel.where.not(id: @banner.id)  #배너를 제외한 채널들 모음
@@ -225,7 +229,7 @@ class HomeController < ApplicationController
           WebsocketRails["chat_" + params[:id]].trigger('chat', {
               id: cl.id.to_s,
               guest_id: "guest_" + cl.guest_id.to_s,
-              nickname: "<img src='/assets/hand.jpg' class='img-circle' style='height:30px; width:30px;'>  (" + Guest.where(:id => params[:guest_id]).take.ip_address.to_s.reverse[0..2] + ")  ",
+              nickname: "<img src='/assets/hand.jpg' class='img-circle'>  (" + Guest.where(:id => params[:guest_id]).take.ip_address.to_s.reverse[0..2] + ")  ",
               msg: params[:msg],
               count: ChatLog.where(:channel_id => params[:channel_id]).count.to_s,
               time: cl.created_at.in_time_zone("Seoul").iso8601,
@@ -246,7 +250,7 @@ class HomeController < ApplicationController
           WebsocketRails["chat_" + params[:id]].trigger('chat', {
               id: cl.id.to_s,
               user_id: "user_" + cl.user_id.to_s,
-              nickname: "<img src='" + user_image +  "' class='img-circle' style='height:30px; width:30px;'><b>  " + User.where(:id => params[:user_id]).take.nickname + "</b>  ",
+              nickname: "<img src='" + user_image +  "' class='img-circle'><b>  " + User.where(:id => params[:user_id]).take.nickname + "</b>  ",
               msg: params[:msg],
               count: ChatLog.where(:channel_id => params[:channel_id]).count.to_s,
               time: cl.created_at.in_time_zone("Seoul").iso8601,

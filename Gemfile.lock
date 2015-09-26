@@ -321,6 +321,7 @@ DEPENDENCIES
   jquery-rails
   mailgun_rails
   mini_magick
+  nokogiri
   rails (= 4.2.1)
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)

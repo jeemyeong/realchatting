@@ -32,6 +32,44 @@ class AdminController < ApplicationController
     redirect_to :back
   end
   
+  def channel_update
+    uri = URI("http://tvcast.naver.com/t/all/popular")
+    html_doc = Nokogiri::HTML(Net::HTTP.get(uri))
+    
+    for g in 0..99
+      if html_doc.css("div.daily_list//strong")[g].nil?
+        break
+      end
+      title = html_doc.css("div.daily_list//strong")[g].inner_text
+      if Channel.where(:user_id => "0", :title => title).take.nil?
+        channel = Channel.new
+        channel.user_id = "0"
+        channel.title = title
+      else
+        channel = Channel.where(:user_id => "0", :title => title).take
+      end
+          playlist = URI(html_doc.css("div.daily_list//a")[2*g]['href'])
+          playlist_doc = Nokogiri::HTML(Net::HTTP.get(playlist))
+            unless playlist_doc.css("div#container//img")[0].nil?
+              if channel.image.nil?
+              require "open-uri"
+              image = playlist_doc.css("div#container//img")[0]['src']
+              channel.remote_image_url = image 
+              end
+            end
+            unless playlist_doc.css("a.btn_all")[0].nil?
+            play = playlist_doc.css("a.btn_all")[0]['href']
+            channel.play = play
+            end
+            unless playlist_doc.css("dl.tit_ar//a")[0].nil?
+            link = playlist_doc.css("dl.tit_ar//a")[0]['href']
+            channel.link = link
+            end
+        channel.save
+    @channel = Channel.all
+    end
+  end
+  
   def users
     @users = User.all
   end
@@ -44,4 +82,5 @@ class AdminController < ApplicationController
     TimelineReply.where(:user_id => params[:id]).all.destroy
     redirect_to :back
   end
+  
 end

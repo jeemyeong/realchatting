@@ -45,6 +45,9 @@ ActiveRecord::Schema.define(version: 20150909040722) do
     t.integer  "user_id",    null: false
     t.string   "title",      null: false
     t.string   "image"
+    t.string   "intro"
+    t.string   "link"
+    t.string   "play"
     t.string   "mediatype"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
