@@ -116,11 +116,11 @@
                         
                         <!-- 메인에 큰주제 사진 뜰부분 - 절대치는 482.156px(해상도에따라달라짐), 세로278Px  -->
                         <!-- 사진 크롭 수치 바뀌면 수정 -->
-                        <div class="col-md-5" style="padding-right:0;">
+                        <div class="col-md-5 cursor" style="padding-right:0;" id="popup_<%=@banner.id%>">
                           <div class="panel panel-default" style="overflow:hidden; border-radius: 0px; height:280px; margin-top:10px; border-color:#E6E7E8;box-shadow:0 0 0;webkit box shadow:0 0 0;">
                   				<div class="cuadro_intro_hover" style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8; height:100%;">
                             <!-- 사진 크롭 수치 바뀌면 수정 -->
-                            <img src="<%= @banner.image.url ? @banner.image : "/assets/noimage5.jpg" %>" id="button_<%=@banner.id%>" class="cursor" style="width:auto; height:100%; margin-left:-10%;">
+                            <img src="<%= @banner.image.url ? @banner.image : "/assets/noimage5.jpg" %>" style="width:auto; height:100%; margin-left:-10%;">
                 						<div class="caption" style="top:230px;">
                 							<div class="blur"></div>
                 							<div class="caption-text">
@@ -129,12 +129,19 @@
                 								  <span class="badge" style="font-size:20px"><div id="count"><div class="detach_count"><%=@banner.channel_joiners.all.count%></div></div></span>
               								  </h3>
                 								<p>Loren ipsum dolor si amet ipsum dolor si amet ipsum dolor...</p>
-                								<a class=" btn btn-default" href="#"><span class="glyphicon glyphicon-plus">입장하기</span></a>
+                								<!--<a class=" btn btn-default" href="#"><span class="glyphicon glyphicon-plus">입장하기</span></a>-->
                 							</div>
                 						</div>
                 					</div>
                           </div>
                         </div>
+                  	    <script>
+                    	   $(function() {
+                  	       $("#popup_<%=@banner.id%>").click(function(){ //팝업으로 뜨자
+                             window.open('/home/chat/<%=@banner.id%>', '_blank', 'width=1600, height=800, toolbar=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no');
+                            })
+                    	   });
+                        </script>
                         
                         <div class="col-md-4" style="padding-left:10px;">
                             <div class="panel panel-default" style="border-radius: 0px; height:280px; margin-top:10px; border-color:#E6E7E8;box-shadow:0 0 0;webkit box shadow:0 0 0;">
@@ -212,14 +219,14 @@
                     								  <span class="badge" style="font-size:22px"><div id="count_<%=c.id%>"><div class="detach_count_<%=c.id%>"><%=c.channel_joiners.all.count%></div></div></span>
                   								  </h3>
                     								<p>Loren ipsum dolor si amet ipsum dolor si amet ipsum dolor...</p>
-                    								<a class=" btn btn-default" href="#"><span class="glyphicon glyphicon-plus"> INFO</span></a>
+                    								<!--<a class=" btn btn-default" href="#"><span class="glyphicon glyphicon-plus"> INFO</span></a>-->
                     							</div>
                     						</div>
                     					</div>
                     	   </div>
                     	   <script>
                     	   $(function() {
-                  	       $("#popup_<%=c.id%>").click(function(){ //배너를 눌렀을때 팝업으로 뜨자
+                  	       $("#popup_<%=c.id%>").click(function(){ //팝업으로 뜨자
                              window.open('/home/chat/<%=c.id%>', '_blank', 'width=1600, height=800, toolbar=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no');
                             })
                     	   });
@@ -248,11 +255,18 @@
                   								  <span class="badge" style="font-size:22px"><div id="count_<%=c.id%>"><div class="detach_count_<%=c.id%>"><%=c.channel_joiners.all.count%></div></div></span>
                 								  </h3>
                   								<p>Loren ipsum dolor si amet ipsum dolor si amet ipsum dolor...</p>
-                  								<a class=" btn btn-default" href="#"><span class="glyphicon glyphicon-plus"> INFO</span></a>
+                  								<!--<a class=" btn btn-default" href="#"><span class="glyphicon glyphicon-plus"> INFO</span></a>-->
                   							</div>
                   						</div>
                   					</div>
                   	   </div>
+                   	   <script>
+                    	   $(function() {
+                  	       $("#popup_<%=c.id%>").click(function(){ //팝업으로 뜨자
+                             window.open('/home/chat/<%=c.id%>', '_blank', 'width=1600, height=800, toolbar=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no');
+                            })
+                    	   });
+                        </script>
                 	   <% end %>
                 </div>
                 <hr>

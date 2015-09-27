@@ -62,7 +62,7 @@ body {
                     <img src='/assets/hand.jpg' class='img-circle'>
                       (<%=c.guest.ip_address.reverse[0..2]%>)
                   </span>
-                  <span class="shuffle msg">
+                  <span class="shuffle msg" style="overflow:hidden; white-space: nowrap;">
                     <%=c.msg %>
                   </span>
                   <abbr class="timeago" style="font-size:12px; float:right;" title="<%=c.created_at.in_time_zone("Seoul").iso8601 %>">
@@ -191,6 +191,24 @@ body {
       		</div> <!-- cd-timeline-content -->
       	</div> <!-- cd-timeline-block -->
       	<% end %>
+      	
+      	<div class="cd-timeline-block">
+          <a href="#default_timeline" data-toggle="collapse">
+      		<div class="cd-timeline-img" style="background:#99887F;">
+      			<span class="glyphicon glyphicon-exclamation-sign glyphicon-center" aria-hidden="true"></span>
+      		</div> <!-- cd-timeline-img -->
+      		</a>
+      		<div class="cd-timeline-content">
+      			<h2><%=@channel.title%></h2>
+            <div class="collapse" style="border-top: 1px solid #e5e5e5; margin-top:50px;" id="default_timeline">
+        			<% unless @channel.image.url.nil? %>
+          			<img src="<%=@channel.image.url%>" style="width:100%; margin-top:20px;" class="img-rounded">
+        			<% end %>
+        			<p><%=@channel.title%>채팅방입니다.</p><br>
+        			<span class="cd-date"><abbr class="timeago" style="font-size:12px;" title="<%=@channel.created_at.in_time_zone("Seoul").iso8601 %>"><%=@channel.created_at.in_time_zone("Seoul").iso8601%></abbr></span>
+            </div>
+      		</div> <!-- cd-timeline-content -->
+      	</div> <!-- cd-timeline-block -->
       	
       </section>
     </div>

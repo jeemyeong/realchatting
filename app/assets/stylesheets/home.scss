@@ -387,12 +387,15 @@ body {
 		text-align: center;
 		top:-20px;
 		width: 100%;
+		h3{font-size: 2rem;}
 }
 
 // 로그에서
 #logs div div{
     padding: 0px;
     margin: 0px;
+    white-space: nowrap;
+    overflow: hidden; 
 }
 #logs div div img{
     width: 20px;
@@ -412,7 +415,7 @@ body {
     margin: 5px 7px 5px 7px;
 }
 #banner_title{
- heigt: 10%; 
+ height: 10%; 
 }
 #banner_title span{
   
@@ -451,4 +454,7 @@ body {
 .container #logs{
  overflow: hidden; 
  position:relative; 
+}
+div.detach_user div{
+  white-space: nowrap;
 }

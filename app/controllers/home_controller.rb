@@ -21,7 +21,7 @@ class HomeController < ApplicationController
          if ChatLog.group(:channel_id).count(:id).first.nil? #챗로그가 많이 있는 방
          banner_id = Channel.all.sample.id
          else 
-         banner_id = ChatLog.group(:channel_id).count(:id).first.first #챗로그가 많이 있는 방
+         banner_id = ChatLog.group(:channel_id).count(:id).first.first
          end
       else
          banner_id = ChannelJoiner.group(:channel_id).count(:id).first.first #그게아니라면 접속자 1위방

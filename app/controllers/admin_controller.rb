@@ -125,8 +125,8 @@ class AdminController < ApplicationController
             playlist = URI(html_doc.css("div.program_ch//a.info_a")[g]['href'])
             playlist_doc = Nokogiri::HTML(Net::HTTP.get(playlist))
               unless playlist_doc.css("div#container//img")[0].nil?
-                if channel.image.url.nil?
                 image = playlist_doc.css("div#container//img")[0]['src']
+                if channel.image.url.nil?
                 channel.remote_image_url = image
                 end
               end
