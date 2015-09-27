@@ -2,6 +2,9 @@
 td, th {
    padding-right:10px; padding-left:10px;
 }
+body {
+ overflow-x:scroll; 
+}
 </style>
 <h1>Channels</h1>
 <%=@channels.inspect%>
@@ -14,6 +17,9 @@ td, th {
       <th style="border:3px solid #ecf0f1;">title  </th>
       <th style="border:3px solid #ecf0f1;">mediatype  </th>
       <th style="border:3px solid #ecf0f1;">Image  </th>
+      <th style="border:3px solid #ecf0f1;">intro  </th>
+      <th style="border:3px solid #ecf0f1;">link  </th>
+      <th style="border:3px solid #ecf0f1;">play  </th>
       <th style="border:3px solid #ecf0f1;">created at  </th>
       <th style="border:3px solid #ecf0f1;">updated at  </th>
       <th style="border:3px solid #ecf0f1;">edit  </th>
@@ -29,6 +35,9 @@ td, th {
         <td style="border:3px solid #ecf0f1;"><%= c.title %>  </td>
         <td style="border:3px solid #ecf0f1;"><%= c.mediatype %>  </td>
         <td style="border:3px solid #ecf0f1;"><%= c.image %>  </td>
+        <td style="border:3px solid #ecf0f1;"><%= c.intro %>  </td>
+        <td style="border:3px solid #ecf0f1;"><%= c.link %>  </td>
+        <td style="border:3px solid #ecf0f1;"><%= c.play %>  </td>
         <td style="border:3px solid #ecf0f1;"><%= c.created_at.in_time_zone("Seoul") %>  </td>
         <td style="border:3px solid #ecf0f1;"><%= c.updated_at.in_time_zone("Seoul") %>  </td>
         <td style="border:3px solid #ecf0f1;">

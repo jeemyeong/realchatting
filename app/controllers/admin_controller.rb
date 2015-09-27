@@ -51,10 +51,9 @@ class AdminController < ApplicationController
           playlist = URI(html_doc.css("div.daily_list//a")[2*g]['href'])
           playlist_doc = Nokogiri::HTML(Net::HTTP.get(playlist))
             unless playlist_doc.css("div#container//img")[0].nil?
-              if channel.image.nil?
-              require "open-uri"
+              if channel.image.url.nil?
               image = playlist_doc.css("div#container//img")[0]['src']
-              channel.remote_image_url = image 
+              channel.remote_image_url = image
               end
             end
             unless playlist_doc.css("a.btn_all")[0].nil?
@@ -64,6 +63,32 @@ class AdminController < ApplicationController
             unless playlist_doc.css("dl.tit_ar//a")[0].nil?
             link = playlist_doc.css("dl.tit_ar//a")[0]['href']
             channel.link = link
+            end
+            for i in 0..99
+              if html_doc.css("div.col1//strong")[i].nil?
+                break
+              end
+              if title == html_doc.css("div.col1//strong")[i].inner_text
+                channel.monday = true
+              end
+              if title == html_doc.css("div.col2//strong")[i].inner_text
+                channel.tuesday = true
+              end
+              if title == html_doc.css("div.col3//strong")[i].inner_text
+                channel.wednesday = true
+              end
+              if title == html_doc.css("div.col4//strong")[i].inner_text
+                channel.thursday = true
+              end
+              if title == html_doc.css("div.col5//strong")[i].inner_text
+                channel.friday = true
+              end
+              if title == html_doc.css("div.col6//strong")[i].inner_text
+                channel.saturday = true
+              end
+              if title == html_doc.css("div.col7//strong")[i].inner_text
+                channel.sunday = true
+              end
             end
         channel.save
     @channel = Channel.all
