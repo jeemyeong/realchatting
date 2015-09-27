@@ -42,15 +42,22 @@ ActiveRecord::Schema.define(version: 20150909040722) do
   end
 
   create_table "channels", force: :cascade do |t|
-    t.integer  "user_id",    null: false
-    t.string   "title",      null: false
+    t.integer  "user_id",                    null: false
+    t.string   "title",                      null: false
     t.string   "image"
     t.string   "intro"
     t.string   "link"
     t.string   "play"
     t.string   "mediatype"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.boolean  "monday",     default: false
+    t.boolean  "tuesday",    default: false
+    t.boolean  "wednesday",  default: false
+    t.boolean  "thursday",   default: false
+    t.boolean  "friday",     default: false
+    t.boolean  "saturday",   default: false
+    t.boolean  "sunday",     default: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
   end
 
   create_table "chat_logs", force: :cascade do |t|

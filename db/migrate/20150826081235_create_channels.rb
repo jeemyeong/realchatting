@@ -9,6 +9,14 @@ class CreateChannels < ActiveRecord::Migration
       t.string :link #방송 링크
       t.string :play #방송 동영상
       t.string :mediatype
+
+      t.boolean :monday, default: false
+      t.boolean :tuesday, default: false
+      t.boolean :wednesday, default: false
+      t.boolean :thursday, default: false
+      t.boolean :friday, default: false
+      t.boolean :saturday, default: false
+      t.boolean :sunday, default: false
       
       t.timestamps null: false
     end

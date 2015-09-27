@@ -69,19 +69,18 @@
                       <div class="panel-body" >
                         <ul class="nav nav-sidebar">
                             <li class="active"><a href="#">홈<span class="sr-only">(current)</span></a></li>
-                            <li><a href="#sec0">베스트챗</a></li>
                             <li>
-                              <a href="#">골라보기</a>
+                              <!--<a href="#">골라보기</a>-->
                               <ul class="nav nav-sidebar">
                                 <li><a href="#sec0"><span class="glyphicon glyphicon-align-left" aria-hidden="true" style="padding-right:10px;"></span>BEST CHAT</a></li>
-                                <li><a href="#sec1"><span class="glyphicon glyphicon-align-left" aria-hidden="true" style="padding-right:10px;"></span>드라마</a></li>
-                                <li><a href="#sec2"><span class="glyphicon glyphicon-align-left" aria-hidden="true" style="padding-right:10px;"></span>예능</a></li>
-                                <li><a href="#sec3"><span class="glyphicon glyphicon-align-left" aria-hidden="true" style="padding-right:10px;"></span>개인채팅방</a></li>
-                                <!--<li><a href="#sec4"><span class="glyphicon glyphicon-align-left" aria-hidden="true" style="padding-right:10px;"></span>Section 4</a></li>-->
-                                <!--<li><a href="#sec4"><span class="glyphicon glyphicon-align-left" aria-hidden="true" style="padding-right:10px;"></span>Section 4</a></li>-->
-                                <!--<li><a href="#sec4"><span class="glyphicon glyphicon-align-left" aria-hidden="true" style="padding-right:10px;"></span>Section 4</a></li>-->
-                                <!--<li><a href="#sec4"><span class="glyphicon glyphicon-align-left" aria-hidden="true" style="padding-right:10px;"></span>Section 4</a></li>-->
-                                <!--<li><a href="#sec4"><span class="glyphicon glyphicon-align-left" aria-hidden="true" style="padding-right:10px;"></span>Section 4</a></li>-->
+                                <li><a href="#sec1"><span class="glyphicon glyphicon-align-left" aria-hidden="true" style="padding-right:10px;"></span>Monday</a></li>
+                                <li><a href="#sec2"><span class="glyphicon glyphicon-align-left" aria-hidden="true" style="padding-right:10px;"></span>Tuesday</a></li>
+                                <li><a href="#sec3"><span class="glyphicon glyphicon-align-left" aria-hidden="true" style="padding-right:10px;"></span>Wednesday</a></li>
+                                <li><a href="#sec4"><span class="glyphicon glyphicon-align-left" aria-hidden="true" style="padding-right:10px;"></span>Thursday</a></li>
+                                <li><a href="#sec5"><span class="glyphicon glyphicon-align-left" aria-hidden="true" style="padding-right:10px;"></span>Friday</a></li>
+                                <li><a href="#sec6"><span class="glyphicon glyphicon-align-left" aria-hidden="true" style="padding-right:10px;"></span>Saturday</a></li>
+                                <li><a href="#sec7"><span class="glyphicon glyphicon-align-left" aria-hidden="true" style="padding-right:10px;"></span>Sunday</a></li>
+                                <li><a href="#sec8"><span class="glyphicon glyphicon-align-left" aria-hidden="true" style="padding-right:10px;"></span>개인채팅방</a></li>
                               </ul>
                             </li>
                         </ul>
@@ -168,10 +167,10 @@
                 
 
                 <div id="sec1" class="notice notice-info" style="margin-left:-12px; margin-top:-8px;">
-                    <strong>드라마</strong>   어쩌구저쩌구의 설명
+                    <strong>Monday</strong>   어쩌구저쩌구의 설명
                 </div>
                 <div class="row">
-                    <% @channels.where(:mediatype => "drama").each do |c| %>
+                    <% @channels.where(:monday => true).each do |c| %>
                       <div class="col-md-3" style="padding-left:3px;">
                       				<div class="cuadro_intro_hover " style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8">
                   						<p style="text-align:center; margin-top:20px;">
@@ -196,10 +195,145 @@
                 
                 <hr>
                 <div id="sec2" class="notice notice-info" style="margin-left:-12px; margin-top:-8px;">
-                    <strong>예능</strong>   어쩌구저쩌구의 설명
+                    <strong>Tuesday</strong>   어쩌구저쩌구의 설명
                 </div>
                 <div class="row">
-                    <% @channels.where(:mediatype => "entertainment").each do |c| %>
+                    <% @channels.where(:tuesday => true).each do |c| %>
+                      <div class="col-md-3" style="padding-left:3px;">
+                      				<div class="cuadro_intro_hover " style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8">
+                  						<p style="text-align:center; margin-top:20px;">
+                  							<img src="<%= c.image.thumb.url ? c.image.thumb.url : "/assets/noimage2.jpg" %>" class="img-responsive" alt="">
+                  						</p>
+                  						<div class="caption">
+                  							<div class="blur"></div>
+                  							<div class="caption-text">
+                  								<h3 style="border-top:2px solid white; border-bottom:2px solid white; padding:10px;">
+                  								  <%=c.title%>
+                  								  <span class="badge" style="font-size:22px"><div id="count_<%=c.id%>"><div class="detach_count_<%=c.id%>"><%=c.channel_joiners.all.count%></div></div></span>
+                								  </h3>
+                  								<p>Loren ipsum dolor si amet ipsum dolor si amet ipsum dolor...</p>
+                  								<a class=" btn btn-default" href="#"><span class="glyphicon glyphicon-plus"> INFO</span></a>
+                  							</div>
+                  						</div>
+                  					</div>
+                  	   </div>
+                	   <% end %>
+                </div>
+                
+                <hr>
+                <div id="sec3" class="notice notice-info" style="margin-left:-12px; margin-top:-8px;">
+                    <strong>Wednesday</strong>   어쩌구저쩌구의 설명
+                </div>
+                <div class="row">
+                    <% @channels.where(:wednesday => true).each do |c| %>
+                      <div class="col-md-3" style="padding-left:3px;">
+                      				<div class="cuadro_intro_hover " style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8">
+                  						<p style="text-align:center; margin-top:20px;">
+                  							<img src="<%= c.image.thumb.url ? c.image.thumb.url : "/assets/noimage2.jpg" %>" class="img-responsive" alt="">
+                  						</p>
+                  						<div class="caption">
+                  							<div class="blur"></div>
+                  							<div class="caption-text">
+                  								<h3 style="border-top:2px solid white; border-bottom:2px solid white; padding:10px;">
+                  								  <%=c.title%>
+                  								  <span class="badge" style="font-size:22px"><div id="count_<%=c.id%>"><div class="detach_count_<%=c.id%>"><%=c.channel_joiners.all.count%></div></div></span>
+                								  </h3>
+                  								<p>Loren ipsum dolor si amet ipsum dolor si amet ipsum dolor...</p>
+                  								<a class=" btn btn-default" href="#"><span class="glyphicon glyphicon-plus"> INFO</span></a>
+                  							</div>
+                  						</div>
+                  					</div>
+                  	   </div>
+                	   <% end %>
+                </div>
+                
+                <hr>
+                <div id="sec4" class="notice notice-info" style="margin-left:-12px; margin-top:-8px;">
+                    <strong>Thursday</strong>   어쩌구저쩌구의 설명
+                </div>
+                <div class="row">
+                    <% @channels.where(:thursday => true).each do |c| %>
+                      <div class="col-md-3" style="padding-left:3px;">
+                      				<div class="cuadro_intro_hover " style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8">
+                  						<p style="text-align:center; margin-top:20px;">
+                  							<img src="<%= c.image.thumb.url ? c.image.thumb.url : "/assets/noimage2.jpg" %>" class="img-responsive" alt="">
+                  						</p>
+                  						<div class="caption">
+                  							<div class="blur"></div>
+                  							<div class="caption-text">
+                  								<h3 style="border-top:2px solid white; border-bottom:2px solid white; padding:10px;">
+                  								  <%=c.title%>
+                  								  <span class="badge" style="font-size:22px"><div id="count_<%=c.id%>"><div class="detach_count_<%=c.id%>"><%=c.channel_joiners.all.count%></div></div></span>
+                								  </h3>
+                  								<p>Loren ipsum dolor si amet ipsum dolor si amet ipsum dolor...</p>
+                  								<a class=" btn btn-default" href="#"><span class="glyphicon glyphicon-plus"> INFO</span></a>
+                  							</div>
+                  						</div>
+                  					</div>
+                  	   </div>
+                	   <% end %>
+                </div>
+                
+                <hr>
+                <div id="sec5" class="notice notice-info" style="margin-left:-12px; margin-top:-8px;">
+                    <strong>Friday</strong>   어쩌구저쩌구의 설명
+                </div>
+                <div class="row">
+                    <% @channels.where(:friday => true).each do |c| %>
+                      <div class="col-md-3" style="padding-left:3px;">
+                      				<div class="cuadro_intro_hover " style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8">
+                  						<p style="text-align:center; margin-top:20px;">
+                  							<img src="<%= c.image.thumb.url ? c.image.thumb.url : "/assets/noimage2.jpg" %>" class="img-responsive" alt="">
+                  						</p>
+                  						<div class="caption">
+                  							<div class="blur"></div>
+                  							<div class="caption-text">
+                  								<h3 style="border-top:2px solid white; border-bottom:2px solid white; padding:10px;">
+                  								  <%=c.title%>
+                  								  <span class="badge" style="font-size:22px"><div id="count_<%=c.id%>"><div class="detach_count_<%=c.id%>"><%=c.channel_joiners.all.count%></div></div></span>
+                								  </h3>
+                  								<p>Loren ipsum dolor si amet ipsum dolor si amet ipsum dolor...</p>
+                  								<a class=" btn btn-default" href="#"><span class="glyphicon glyphicon-plus"> INFO</span></a>
+                  							</div>
+                  						</div>
+                  					</div>
+                  	   </div>
+                	   <% end %>
+                </div>
+                
+                <hr>
+                <div id="sec6" class="notice notice-info" style="margin-left:-12px; margin-top:-8px;">
+                    <strong>Saturday</strong>   어쩌구저쩌구의 설명
+                </div>
+                <div class="row">
+                    <% @channels.where(:saturday => true).each do |c| %>
+                      <div class="col-md-3" style="padding-left:3px;">
+                      				<div class="cuadro_intro_hover " style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8">
+                  						<p style="text-align:center; margin-top:20px;">
+                  							<img src="<%= c.image.thumb.url ? c.image.thumb.url : "/assets/noimage2.jpg" %>" class="img-responsive" alt="">
+                  						</p>
+                  						<div class="caption">
+                  							<div class="blur"></div>
+                  							<div class="caption-text">
+                  								<h3 style="border-top:2px solid white; border-bottom:2px solid white; padding:10px;">
+                  								  <%=c.title%>
+                  								  <span class="badge" style="font-size:22px"><div id="count_<%=c.id%>"><div class="detach_count_<%=c.id%>"><%=c.channel_joiners.all.count%></div></div></span>
+                								  </h3>
+                  								<p>Loren ipsum dolor si amet ipsum dolor si amet ipsum dolor...</p>
+                  								<a class=" btn btn-default" href="#"><span class="glyphicon glyphicon-plus"> INFO</span></a>
+                  							</div>
+                  						</div>
+                  					</div>
+                  	   </div>
+                	   <% end %>
+                </div>
+                
+                <hr>
+                <div id="sec7" class="notice notice-info" style="margin-left:-12px; margin-top:-8px;">
+                    <strong>Sunday</strong>   어쩌구저쩌구의 설명
+                </div>
+                <div class="row">
+                    <% @channels.where(:sunday => true).each do |c| %>
                       <div class="col-md-3" style="padding-left:3px;">
                       				<div class="cuadro_intro_hover " style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8">
                   						<p style="text-align:center; margin-top:20px;">
@@ -224,7 +358,7 @@
                 <hr>
                 
                 
-                <div id="sec3" class="notice notice-info" style="margin-left:-12px; margin-top:-8px;">
+                <div id="sec8" class="notice notice-info" style="margin-left:-12px; margin-top:-8px;">
                     <strong>개인 채팅방</strong>   어쩌구저쩌구의 설명
                 </div>
                 <div class="row">
