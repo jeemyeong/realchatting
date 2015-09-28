@@ -1,9 +1,6 @@
 class HomeController < ApplicationController
     before_action :authenticate_user!, only: [:chat_maker, :chat_making, :timeline_maker, :timeline_reply_maker]
   def intro
-      # if Channel.take.nil?                                    #채널에방이 아무것도 없다면
-      #   Channel.create(:user_id => "0", :title => "default") #user_id 0인 default채널을 하나 만들자.
-      # end #시드 주면 필요없는 코드
       if ChannelJoiner.group(:channel_id).count(:id).first.nil? #접속자가 모두 0이라면
          banner_id = Channel.all.sample.id                      #배너는 하나를 샘플로 뽑자
       else
@@ -14,9 +11,6 @@ class HomeController < ApplicationController
   end
   
   def index
-      # if Channel.take.nil?                                    #채널에방이 아무것도 없다면
-        # Channel.create(:user_id => "0", :title => "default") #user_id 0인 default채널을 하나 만들자.
-      # end #시드 주면 필요없는 코드
       if ChannelJoiner.group(:channel_id).count(:id).first.nil? #접속자가 모두 0이라면
          if ChatLog.group(:channel_id).count(:id).first.nil? #챗로그가 많이 있는 방
          banner_id = Channel.all.sample.id

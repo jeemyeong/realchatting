@@ -122,7 +122,7 @@ body {
     
     <div class="col-lg-6 col-md-6 col-xs-12 col-sm-6" id="timeline">
     	<div style="height:50px; background-color:#303e49; font-size:30px; font-weight: bold; color:white; text-align:center; margin:10px 0px 10px 0px; padding-top:10px; border-radius: 25px;">
-    		<%=@channel.title%>의 타임라인
+    		<%=truncate(@channel.title, length: 15)%>의 타임라인
     	</div>
     		
       <section id="cd-timeline" style="margin:0px;">

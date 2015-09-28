@@ -213,12 +213,12 @@
                     						</p>
                     						<div class="caption">
                     							<div class="blur"></div>
-                    							<div class="caption-text">
+                    							<div class="caption-text" >
                     								<h3 style="border-top:2px solid white; border-bottom:2px solid white; padding:10px;">
-                    								  <%=c.title%>
+                    								  <%=truncate(c.title, length: 9)%>
                     								  <span class="badge" style="font-size:22px"><div id="count_<%=c.id%>"><div class="detach_count_<%=c.id%>"><%=c.channel_joiners.all.count%></div></div></span>
                   								  </h3>
-                    								<p>Loren ipsum dolor si amet ipsum dolor si amet ipsum dolor...</p>
+                    								<p><%=c.title%></p>
                     								<!--<a class=" btn btn-default" href="#"><span class="glyphicon glyphicon-plus"> INFO</span></a>-->
                     							</div>
                     						</div>
@@ -251,10 +251,10 @@
                   							<div class="blur"></div>
                   							<div class="caption-text">
                   								<h3 style="border-top:2px solid white; border-bottom:2px solid white; padding:10px;">
-                  								  <%=c.title%>
+                  								  <%=truncate(c.title, length: 9)%>
                   								  <span class="badge" style="font-size:22px"><div id="count_<%=c.id%>"><div class="detach_count_<%=c.id%>"><%=c.channel_joiners.all.count%></div></div></span>
                 								  </h3>
-                  								<p>Loren ipsum dolor si amet ipsum dolor si amet ipsum dolor...</p>
+                  								<p><%=c.title%></p>
                   								<!--<a class=" btn btn-default" href="#"><span class="glyphicon glyphicon-plus"> INFO</span></a>-->
                   							</div>
                   						</div>
