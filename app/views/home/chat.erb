@@ -54,7 +54,7 @@ body {
       </div>
       <div class="modal-header form-signin-heading" id="allchat_content"><!--chat content-->
         <ul id="logs" style="padding-left: 0px;">
-          <% @channel.chat_logs.last(15).each do |c| %> <!--일단 15개만 보여주는걸로 하자-->
+          <% @channel.chat_logs.last(30).each do |c| %> <!--일단 30개만 보여주는걸로 하자-->
         		
               <% if c.user_id == nil %>
                 <div class="detach_chat row guest_<%=c.guest.id%>" style="padding-bottom:10px;">
