@@ -3,18 +3,31 @@
 body {
  overflow: hidden; 
 }
-
 }  
+
+div#background-image{
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	right: 0;
+  background-image: url("<%=@channel.image.url%>") ;
+  -moz-background-size: cover;
+  -webkit-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  opacity: 0.1;
+}
 .dropdown-menu {
  position: relative;
  float: none;
  max-width: 200px;
 }
 </style>
-
+<div id="background-image">
+</div>
 <div class="container-fluid">
-  <div class="row mbody" style="background-color: #e9f0f5;">
-    <div class="col-xs-12 col-lg-6 col-md-6 col-sm-6" style="background-color: white;" id="chatlogs">
+  <div class="row mbody">
+    <div class="col-xs-12 col-lg-6 col-md-6 col-sm-6" id="chatlogs">
       <div class="modal-header">
         <a href="/" class="btn btn-md btn-primary ui-btn ui-shadow ui-corner-all" style="float:right; padding: 5px 15px 5px;" target="_blank"><b>실챗</b></a>
         <span class="modal-title form-signin-heading" style="font-size:25px;"><b><%=@channel.title%></b></span>
