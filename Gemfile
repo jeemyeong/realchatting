@@ -1,5 +1,9 @@
 source 'https://rubygems.org'
 
+# 헤로쿠배포를 위한 젬
+gem 'pg', group: :production
+gem 'rails_12factor', group: :production
+
 gem 'nokogiri'
 gem 'devise'
 gem 'websocket-rails'
@@ -10,7 +14,7 @@ gem 'mailgun_rails'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.1'
 # Use sqlite3 as the database for Active Record
-gem 'sqlite3'
+gem 'sqlite3', group: :development
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
