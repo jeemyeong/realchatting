@@ -7,7 +7,7 @@ gem 'rails_12factor', group: :production
 gem 'nokogiri'
 gem 'devise'
 gem 'websocket-rails'
-gem "mini_magick"
+gem 'mini_magick', :git => 'git://github.com/minimagick/minimagick.git', :ref => '6d0f8f953112cce6324a524d76c7e126ee14f392'
 gem "fog"
 gem "carrierwave"
 gem 'mailgun_rails'
