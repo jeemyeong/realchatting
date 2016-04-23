@@ -112,6 +112,7 @@
                   
                 <div id="masthead">  
                   <div class="container" id="sec_home">
+                  <% unless @banner.nil? %>
                       <div class="row" style="margin-left:-43px;">
                         
                         <!-- 메인에 큰주제 사진 뜰부분 - 절대치는 482.156px(해상도에따라달라짐), 세로278Px  -->
@@ -173,6 +174,7 @@
                             </div>
                         </div>
                       </div> 
+                    <% end %>
                   </div><!--/container-->
                 </div><!--/masthead-->
                   
@@ -205,6 +207,7 @@
                   <% end %>
                   </div>
                   <div class="row">
+                    <% unless @channels.nil? %>
                       <% @channels.where(day.downcase => true).each do |c| %>
                         <div class="col-md-3 cursor popup_<%=c.id%>" style="padding-left:3px;" >
                         				<div class="cuadro_intro_hover " style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8">
@@ -232,6 +235,7 @@
                     	   });
                         </script>
                   	   <% end %>
+                  	 <% end %>
                   </div>
                   <% end %>
                 <% end %>
@@ -241,6 +245,7 @@
                     <strong>개인 채팅방</strong>   어쩌구저쩌구의 설명
                 </div>
                 <div class="row">
+                  <% unless @channels.nil? %>
                     <% @channels.where.not(:user_id => "0").each do |c| %>
                       <div class="col-md-3" style="padding-left:3px;">
                       				<div class="cuadro_intro_hover " style="border-radius:0px; margin-bottom:10px; border-color:#E6E7E8">
@@ -268,6 +273,7 @@
                     	   });
                         </script>
                 	   <% end %>
+                	 <% end %>
                 </div>
                 <hr>
                 </div><!--/right-->
@@ -455,6 +461,7 @@
     
     
     //배너 시작
+    <% unless @banner.nil? %>
     $("#chat_<%=@banner.id%>").Morphext({ //배너 버튼의 텍스트 스타일 설정
         animation: "flash",
         speed: 3000,
@@ -496,6 +503,7 @@
     $("#count").append('<div class="detach_count">' + data.count + '</div>')
     {$('.detach_count').first().detach();} // 기존 유져 카운트를 떼자
     });
+    <% end %>
     //배너 끝
             <% if user_signed_in? %> //로그인 된 경우
                 $("#current_user").Morphext({ //로그인된 current_user의 텍스트 스타일을 입히자
@@ -574,6 +582,7 @@
 				<div class="gamma-container gamma-loading" id="gamma-container">
 
 					<ul class="gamma-gallery">
+					 <% unless @channels.nil? %>
 					  <% @channels.each do |c| %>
 						<li>
 							<div data-alt="img03" data-description="<h3><%=c.title%></h3>" data-max-width="1800" data-max-height="1350">
@@ -584,6 +593,7 @@
 							</div>
 						</li>
 						<% end %>
+					 <% end %>
 					</ul>
 
 					<div class="gamma-overlay"></div>

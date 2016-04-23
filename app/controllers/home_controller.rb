@@ -13,7 +13,9 @@ class HomeController < ApplicationController
   def index
       if ChannelJoiner.group(:channel_id).count(:id).first.nil? #접속자가 모두 0이라면
          if ChatLog.group(:channel_id).count(:id).first.nil? #챗로그가 많이 있는 방
-         banner_id = Channel.all.sample.id
+           unless Channel.all.sample.nil?
+           banner_id = Channel.all.sample.id
+           end
          else 
          banner_id = ChatLog.group(:channel_id).count(:id).first.first
          end
@@ -21,7 +23,9 @@ class HomeController < ApplicationController
          banner_id = ChannelJoiner.group(:channel_id).count(:id).first.first #그게아니라면 접속자 1위방
       end
       @banner = Channel.where(:id => banner_id).take #현재접속자 수 1위방
+      unless @banner.nil?
       @channels = Channel.where.not(id: @banner.id)  #배너를 제외한 채널들 모음
+      end
       unless ChannelJoiner.where.not(updated_at: (Time.now - 30)..Time.now).take.nil?  #30초가 넘게 업데이트가 안된 db는
              ChannelJoiner.where.not(updated_at: (Time.now - 30)..Time.now).delete_all #다 지우자
       end
